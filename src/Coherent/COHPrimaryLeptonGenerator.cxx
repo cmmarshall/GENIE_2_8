@@ -1,6 +1,6 @@
 //____________________________________________________________________________
 /*
- Copyright (c) 2003-2013, GENIE Neutrino MC Generator Collaboration
+ Copyright (c) 2003-2010, GENIE Neutrino MC Generator Collaboration
  For the full text of the license visit http://copyright.genie-mc.org
  or see $GENIE/LICENSE
 
@@ -27,6 +27,11 @@
 #include "Interaction/Interaction.h"
 #include "Messenger/Messenger.h"
 #include "Numerical/RandomGen.h"
+#include "Base/XSecAlgorithmI.h"
+#include "EVGCore/EVGThreadException.h"
+#include "EVGCore/EventGeneratorI.h"
+#include "EVGCore/RunningThreadInfo.h"
+
 
 using namespace genie;
 using namespace genie::constants;
@@ -50,6 +55,20 @@ COHPrimaryLeptonGenerator::~COHPrimaryLeptonGenerator()
 }
 //___________________________________________________________________________
 void COHPrimaryLeptonGenerator::ProcessEventRecord(GHepRecord * evrec) const
+{
+//-- Access cross section algorithm for running thread
+  RunningThreadInfo * rtinfo = RunningThreadInfo::Instance();
+  const EventGeneratorI * evg = rtinfo->RunningThread();
+  const XSecAlgorithmI *fXSecModel = evg->CrossSectionAlg();
+  if (fXSecModel->Id().Name() == "genie::ReinSeghalCOHPiPXSec") {
+         CalculatePrimaryLepton_ReinSeghal(evrec);
+  } else if ((fXSecModel->Id().Name() == "genie::AlvarezRusoCOHXSec")) {
+         CalculatePrimaryLepton_AlvarezRuso(evrec);
+  }
+}
+
+//___________________________________________________________________________
+void COHPrimaryLeptonGenerator::CalculatePrimaryLepton_ReinSeghal(GHepRecord * evrec) const
 {
 // This method generates the final state primary lepton in COH events
 
@@ -101,3 +120,11 @@ void COHPrimaryLeptonGenerator::ProcessEventRecord(GHepRecord * evrec) const
   this->SetPolarization(evrec);
 }
 //___________________________________________________________________________
+void COHPrimaryLeptonGenerator::CalculatePrimaryLepton_AlvarezRuso(GHepRecord * evrec) const
+{
+  Interaction * interaction = evrec->Summary();
+  const Kinematics &   kinematics = interaction -> Kine();
+  TLorentzVector p4l = kinematics.FSLeptonP4();
+  int pdgc = interaction->FSPrimLepton()->PdgCode();
+  this->AddToEventRecord(evrec, pdgc, p4l);
+}

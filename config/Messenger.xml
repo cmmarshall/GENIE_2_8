@@ -24,9 +24,10 @@
 
   <priority msgstream="Messenger">           NOTICE </priority>
   <priority msgstream="AhrensNCEL">          WARN   </priority>
-  <priority msgstream="AlgFactory">          INFO   </priority>
-  <priority msgstream="Algorithm">           WARN   </priority>
-  <priority msgstream="AlgConfigPool">       WARN   </priority>
+  <priority msgstream="AlgFactory">          DEBUG </priority>
+  <priority msgstream="Algorithm">           DEBUG </priority>
+  <priority msgstream="AlgConfigPool">       NOTICE </priority>
+  <priority msgstream="AlvarezRusoCohPi">    WARN   </priority>
   <priority msgstream="BardinIMD">           NOTICE </priority>
   <priority msgstream="BaryonResList">       WARN   </priority>
   <priority msgstream="BaseHad">             NOTICE </priority>
@@ -38,9 +39,11 @@
   <priority msgstream="CharmHad">            NOTICE </priority>
   <priority msgstream="CFracTab">            INFO   </priority>
   <priority msgstream="COHXSec">             NOTICE </priority>
+  <priority msgstream="COHXSecAR">           NOTICE </priority>
   <priority msgstream="CLAP">                NOTICE </priority>
   <priority msgstream="COHHadronicVtx">      WARN   </priority>
   <priority msgstream="COHKinematics">       WARN   </priority>
+  <priority msgstream="ASKKinematics">       DEBUG  </priority>
   <priority msgstream="DFRHadronicVtx">      DEBUG  </priority>
   <priority msgstream="DFRKinematics">       DEBUG  </priority>
   <priority msgstream="Decay">               NOTICE </priority>
@@ -50,7 +53,7 @@
   <priority msgstream="DISPXSec">            NOTICE </priority>
   <priority msgstream="DISHadronicVtx">      WARN   </priority>
   <priority msgstream="DISKinematics">       WARN   </priority>
-  <priority msgstream="EventGenerator">      WARN   </priority> 
+  <priority msgstream="EventGenerator">      DEBUG   </priority> 
   <priority msgstream="Elastic">             INFO   </priority>
   <priority msgstream="EVGChain">            INFO   </priority>
   <priority msgstream="EvGenListAssembler">  WARN   </priority>
@@ -150,7 +153,7 @@
   <priority msgstream="VldTestInputs">       WARN   </priority>
   <priority msgstream="XSecBase">            NOTICE </priority>
   <priority msgstream="XSecAlgMap">          NOTICE </priority>
-  <priority msgstream="XSecSplLst">          NOTICE </priority>
+  <priority msgstream="XSecSplLst">          INFO </priority>
 
   <priority msgstream="gevgen">              NOTICE </priority>
   <priority msgstream="gevgen_ndcy">         NOTICE </priority>
@@ -163,6 +166,6 @@
   <priority msgstream="grwght1scan">         INFO   </priority>
   <priority msgstream="gtune">               INFO   </priority>
   <priority msgstream="gntpc">               INFO   </priority>
-  <priority msgstream="gmkspl">              INFO   </priority>
+  <priority msgstream="gmkspl">              DEBUG   </priority>
 
 </messenger_config>

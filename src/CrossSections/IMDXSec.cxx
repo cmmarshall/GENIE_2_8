@@ -69,11 +69,10 @@ double IMDXSec::Integrate(
   //interaction->SetBit(kISkipKinematicChk);
 
 #ifdef __GENIE_GSL_ENABLED__
+  double abstol = 1; // We mostly care about relative tolerance
   ROOT::Math::IBaseFunctionOneDim * func = new utils::gsl::wrap::dXSec_dy_E(model, interaction);
   ROOT::Math::IntegrationOneDim::Type ig_type = utils::gsl::Integration1DimTypeFromString(fGSLIntgType);
-  ROOT::Math::Integrator ig(ig_type);
-  ig.SetFunction(*func);
-  ig.SetRelTolerance(fGSLRelTol);
+  ROOT::Math::Integrator ig(*func,ig_type,abstol,fGSLRelTol,fGSLMaxEval);
   double xsec = ig.Integral(yl.min, yl.max) * (1E-38 * units::cm2);
 
 #else
@@ -111,8 +110,9 @@ void IMDXSec::LoadConfig(void)
   assert(fIntegrator);
 
   // Get GSL integration type & relative tolerance
-  fGSLIntgType = fConfig->GetStringDef("gsl-integration-type",  "adaptive");
-  fGSLRelTol   = fConfig->GetDoubleDef("gsl-relative-tolerance", 0.01);
+  fGSLIntgType = fConfig->GetStringDef("gsl-integration-type"  ,  "adaptive");
+  fGSLRelTol   = fConfig->GetDoubleDef("gsl-relative-tolerance", 1E-4);
+  fGSLMaxEval  = (unsigned int) fConfig->GetIntDef   ("gsl-max-eval"          , 100000);
 }
 //____________________________________________________________________________
 

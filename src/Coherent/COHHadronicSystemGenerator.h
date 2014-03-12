@@ -11,7 +11,7 @@
 
 \created  October 03, 2004
 
-\cpright  Copyright (c) 2003-2013, GENIE Neutrino MC Generator Collaboration
+\cpright  Copyright (c) 2003-2010, GENIE Neutrino MC Generator Collaboration
           For the full text of the license visit http://copyright.genie-mc.org
           or see $GENIE/LICENSE
 */
@@ -33,6 +33,8 @@ public :
 
   // implement the EventRecordVisitorI interface
   void ProcessEventRecord(GHepRecord * event_rec) const;
+  void CalculateHadronicSystem_ReinSeghal(GHepRecord * event_rec) const;
+  void CalculateHadronicSystem_AlvarezRuso(GHepRecord * event_rec) const;
 };
 
 }      // genie namespace

@@ -35,12 +35,18 @@ typedef enum EKineVar {
   kKVq2,
   kKVW,
   kKVt,
+  kKVTk,
+  kKVTl,
+  kKVctl,
   kKVSelx,
   kKVSely,
   kKVSelQ2,
   kKVSelq2,
   kKVSelW,
-  kKVSelt
+  kKVSelt,
+  kKVSelTk,
+  kKVSelTl,
+  kKvSelctl
 
 } KineVar_t;
 
@@ -59,6 +65,9 @@ public:
       case(kKVq2)   : return " *Running* Momentum transfer q2 (<0)";  break;
       case(kKVW)    : return " *Running* Hadronic invariant mass W";  break;
       case(kKVt)    : return " *Running* COH 4p transfer to nucleus"; break;
+      case(kKVTk)   : return " *Running* ASK kaon kinetic energy";    break;
+      case(kKVTl)   : return " *Running* ASK lepton kinetic energy";  break;
+      case(kKVctl)  : return " *Running* ASK cosine lepton theta";    break;
       case(kKVSelx) : return "*Selected* Bjorken x";                  break;
       case(kKVSely) : return "*Selected* Inelasticity y";             break;
       case(kKVSelQ2): return "*Selected* Momentum transfer Q2 (>0)";  break;

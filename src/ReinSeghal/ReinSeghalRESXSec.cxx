@@ -21,6 +21,7 @@
 #include <TMath.h>
 #include <Math/IFunction.h>
 #include <Math/IntegratorMultiDim.h>
+#include "Math/AdaptiveIntegratorMultiDim.h"
 
 #include "Algorithm/AlgConfigPool.h"
 #include "BaryonResonance/BaryonResUtils.h"
@@ -186,16 +187,32 @@ double ReinSeghalRESXSec::Integrate(
           << "{Q^2} = " << rQ2.min << ", " << rQ2.max;
 
 #ifdef __GENIE_GSL_ENABLED__   
-    ROOT::Math::IBaseFunctionMultiDim * func =
-        new utils::gsl::wrap::d2XSec_dWdQ2_E(model, interaction);
-    ROOT::Math::IntegrationMultiDim::Type ig_type = 
-        utils::gsl::IntegrationNDimTypeFromString(fGSLIntgType);
-    ROOT::Math::IntegratorMultiDim ig(ig_type);
-    ig.SetRelTolerance(fGSLRelTol);   
-    ig.SetFunction(*func);
     double kine_min[2] = { rW.min, rQ2.min };
     double kine_max[2] = { rW.max, rQ2.max };
+    bool   in_log[2]   = { fGSLInLogX, fGSLInLogY};
+    ROOT::Math::IBaseFunctionMultiDim * func = 
+        new utils::gsl::wrap::d2XSec_dWdQ2_E(fSingleResXSecModel, interaction);
+        
+    ROOT::Math::IBaseFunctionMultiDim * wrapped_func = 
+        new utils::gsl::wrap::dXSec_Log_Wrapper(func,in_log,kine_min,kine_max);
+    
+    ROOT::Math::IntegrationMultiDim::Type ig_type = 
+        utils::gsl::IntegrationNDimTypeFromString(fGSLIntgType);
+        
+    double abstol = 1; //We mostly care about relative tolerance.
+    
+    ROOT::Math::IntegratorMultiDim ig(*wrapped_func, ig_type, abstol, fGSLRelTol, fGSLMaxEval);
+    
+    if (ig_type == ROOT::Math::IntegrationMultiDim::kADAPTIVE) {
+       ROOT::Math::AdaptiveIntegratorMultiDim * cast =
+         dynamic_cast<ROOT::Math::AdaptiveIntegratorMultiDim*>( ig.GetIntegrator() );
+       assert(cast);
+       cast->SetMinPts(fGSLMinEval);
+    }
+
     double xsec = ig.Integral(kine_min, kine_max) * (1E-38 * units::cm2);
+    
+    delete wrapped_func;
 
 #else         
     GXSecFunc * func = 
@@ -234,8 +251,12 @@ void ReinSeghalRESXSec::LoadConfig(void)
   assert (fIntegrator);
 
   // Get GSL integration type & relative tolerance
-  fGSLIntgType = fConfig->GetStringDef("gsl-integration-type",  "adaptive");
+  fGSLIntgType = fConfig->GetStringDef("gsl-integration-type"  ,  "adaptive");
   fGSLRelTol   = fConfig->GetDoubleDef("gsl-relative-tolerance", 0.01);
+  fGSLMinEval  = (unsigned int) fConfig->GetIntDef   ("gsl-min-eval" , 100000);
+  fGSLMaxEval  = (unsigned int) fConfig->GetIntDef   ("gsl-max-eval" , 500000);
+  fGSLInLogX   = fConfig->GetBoolDef   ("gsl-in-log-x" , false);
+  fGSLInLogY   = fConfig->GetBoolDef   ("gsl-in-log-y" , true );
 
   // Get upper E limit on res xsec spline (=f(E)) before assuming xsec=const
   fEMax = fConfig->GetDoubleDef("ESplineMax", 100);

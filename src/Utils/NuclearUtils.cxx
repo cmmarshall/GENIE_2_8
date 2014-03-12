@@ -359,9 +359,11 @@ double genie::utils::nuclear::Density(double r, int A, double ring)
     else { 
        c = TMath::Power(A,0.35); z = 0.54; 
     } //others
+    
+#ifdef __GENIE_LOW_LEVEL_MESG_ENABLED__
+    LOG("Nuclear",pINFO) << "r= " << r << ", ring= " << ring;
+#endif
 
-    LOG("Nuclear",pINFO)
-	<< "r= " << r << ", ring= " << ring;
     double rho = DensityWoodsSaxon(r,c,z,ring);
     return rho;
   }
@@ -404,13 +406,15 @@ double genie::utils::nuclear::DensityGaus(
   ring = TMath::Min(ring, 0.3*a);
 
   double aeval = a + ring;
-  double norm  = 1./((5.568 + alf*8.353)*TMath::Power(a,3.));  //0.0132;
-  double b     = TMath::Power(r/aeval, 2.);
+  double norm  = 1./((5.568 + alf*8.353)*(a*a*a));  //0.0132;
+  double b     = r*r/(aeval*aeval);
   double dens  = norm * (1. + alf*b) * TMath::Exp(-b);
-
+  
+#ifdef __GENIE_LOW_LEVEL_MESG_ENABLED__
   LOG("Nuclear", pINFO) 
         << "r = " << r << ", norm = " << norm << ", dens = " << dens 
         << ", aeval= " << aeval;
+#endif
 
   return dens;
 }
@@ -425,18 +429,21 @@ double genie::utils::nuclear::DensityWoodsSaxon(
 // input  : radial distance in nucleus [units: fm]
 // output : nuclear density            [units: fm^-3]
 
+#ifdef __GENIE_LOW_LEVEL_MESG_ENABLED__
   LOG("Nuclear",pINFO)
       << "c= " << c << ", z= " << z << ",ring= " << ring;
+#endif
 
   ring = TMath::Min(ring, 0.75*c);
 
   double ceval = c + ring;
-  double norm  = (3./(4.*kPi*TMath::Power(c,3)))*1./(1.+TMath::Power((kPi*z/c),2));
+  double norm  = (3./(4.*kPi*(c*c*c))) / ( 1.+( kPi2*z*z/(c*c) ) );
   double dens  = norm / (1 + TMath::Exp((r-ceval)/z));
-
+#ifdef __GENIE_LOW_LEVEL_MESG_ENABLED__
   LOG("Nuclear", pINFO) 
      << "r = " << r << ", norm = " << norm 
      << ", dens = " << dens << " , ceval= " << ceval;
+#endif
 
   return dens;
 }

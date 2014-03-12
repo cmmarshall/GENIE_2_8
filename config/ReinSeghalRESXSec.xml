@@ -30,6 +30,13 @@ ESplineMax                  double  No   Emax in RES splines, xsec(E>Emax)=xsec(
      <param type="alg"    name="Integrator">             genie::Simpson2DFixN/RS             </param>
      <param type="double" name="ESplineMax">             100                                 </param>
      <param type="string" name="ResonanceNameList">      P33(1232),P11(1440)                 </param>
+     
+    <param type="string" name ="gsl-integration-type">    adaptive  </param>
+    <param type="int"    name ="gsl-max-evals">            5000000  </param>
+    <param type="int"    name ="gsl-min-evals">             100000  </param>
+    <param type="double" name ="gsl-relative-tolerance"  >    0.01  </param>
+    <param type="bool"   name ="gsl-in-log-x" >              false  </param>
+    <param type="bool"   name ="gsl-in-log-y" >               true  </param>
   </param_set>
 
 
@@ -39,6 +46,13 @@ ESplineMax                  double  No   Emax in RES splines, xsec(E>Emax)=xsec(
   <param_set name="Default"> 
      <param type="alg"    name="Integrator">             genie::Simpson2DFixN/RS             </param>
      <param type="double" name="ESplineMax">             100                                 </param>
+     
+    <param type="string" name ="gsl-integration-type">    adaptive  </param>
+    <param type="int"    name ="gsl-max-evals">            5000000  </param>
+    <param type="int"    name ="gsl-min-evals">             100000  </param>
+    <param type="double" name ="gsl-relative-tolerance"  >    0.01  </param>
+    <param type="bool"   name ="gsl-in-log-x" >              false  </param>
+    <param type="bool"   name ="gsl-in-log-y" >               true  </param>
   </param_set>
 
 <!--
@@ -52,6 +66,12 @@ ESplineMax                  double  No   Emax in RES splines, xsec(E>Emax)=xsec(
                    D33(1700),P11(1440),P33(1600),P13(1720),F15(1680),P31(1910),P33(1920),
                    F35(1905),F37(1950),P11(1710),F17(1970)
      </param>
+    <param type="string" name ="gsl-integration-type">    adaptive  </param>
+    <param type="int"    name ="gsl-max-evals">            5000000  </param>
+    <param type="int"    name ="gsl-min-evals">             100000  </param>
+    <param type="double" name ="gsl-relative-tolerance"  >    0.01  </param>
+    <param type="bool"   name ="gsl-in-log-x" >              false  </param>
+    <param type="bool"   name ="gsl-in-log-y" >               true  </param>
   </param_set>
 
 </alg_conf>

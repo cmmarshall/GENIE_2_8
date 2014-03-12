@@ -1,6 +1,6 @@
 //____________________________________________________________________________
 /*
- Copyright (c) 2003-2013, GENIE Neutrino MC Generator Collaboration
+ Copyright (c) 2003-2010, GENIE Neutrino MC Generator Collaboration
  For the full text of the license visit http://copyright.genie-mc.org
  or see $GENIE/LICENSE
 
@@ -39,6 +39,11 @@
 #include "PDG/PDGCodes.h"
 #include "PDG/PDGUtils.h"
 #include "Utils/PrintUtils.h"
+#include "Base/XSecAlgorithmI.h"
+#include "EVGCore/EVGThreadException.h"
+#include "EVGCore/EventGeneratorI.h"
+#include "EVGCore/RunningThreadInfo.h"
+
 
 using namespace genie;
 using namespace genie::constants;
@@ -63,6 +68,20 @@ COHHadronicSystemGenerator::~COHHadronicSystemGenerator()
 //___________________________________________________________________________
 void COHHadronicSystemGenerator::ProcessEventRecord(GHepRecord * evrec) const
 {
+// Access cross section algorithm for running thread
+  RunningThreadInfo * rtinfo = RunningThreadInfo::Instance();
+  const EventGeneratorI * evg = rtinfo->RunningThread();
+  const XSecAlgorithmI *fXSecModel = evg->CrossSectionAlg();
+  if (fXSecModel->Id().Name() == "genie::ReinSeghalCOHPiPXSec") {
+       CalculateHadronicSystem_ReinSeghal(evrec);
+  } else if ((fXSecModel->Id().Name() == "genie::AlvarezRusoCOHXSec")) {
+       CalculateHadronicSystem_AlvarezRuso(evrec);
+  }
+}
+//___________________________________________________________________________
+void COHHadronicSystemGenerator::CalculateHadronicSystem_ReinSeghal(GHepRecord * evrec) const
+{
+//
 // This method generates the final state hadronic system (pion + nucleus) in 
 // COH interactions
 //
@@ -173,4 +192,56 @@ void COHHadronicSystemGenerator::ProcessEventRecord(GHepRecord * evrec) const
      ppi3.Px(), ppi3.Py(),ppi3.Pz(),Epi, vtx.X(), vtx.Y(), vtx.Z(), vtx.T());
 }
 //___________________________________________________________________________
+void COHHadronicSystemGenerator::CalculateHadronicSystem_AlvarezRuso(GHepRecord * evrec) const
+{
+  Interaction * interaction = evrec->Summary();
+  const Kinematics &   kinematics = interaction -> Kine();
+  GHepParticle * nu  = evrec->Probe();
+  GHepParticle * Ni  = evrec->TargetNucleus();
+  GHepParticle * fsl = evrec->FinalStatePrimaryLepton();
+
+// Pion
+  const TLorentzVector ppi  = kinematics.HadSystP4();
+  const TVector3 ppi3 = ppi.Vect();
+  const double Epi = ppi.E();
+  int pion_pdgc=0;
+  if ( interaction->ProcInfo().IsWeakCC() ) {
+    if( nu->Pdg() > 0 ){ // neutrino
+      pion_pdgc = kPdgPiP;
+     }
+     else{ // anti-neutrino
+      pion_pdgc = kPdgPiM;
+     }
+  }
+  else if ( interaction->ProcInfo().IsWeakNC() ) {
+       pion_pdgc = kPdgPi0;
+  }
+  else{
+     LOG("COHHadronicSystemGeneratorAR", pFATAL)
+               << "Could not determine pion involved in interaction";
+     exit(1);
+  }
+ 
+//
+// Nucleus
+  int nucl_pdgc = Ni->Pdg(); // pdg of final nucleus same as the initial nucleus
+  double pxNf = nu->Px() + Ni->Px() - fsl->Px() - ppi3.Px();
+  double pyNf = nu->Py() + Ni->Py() - fsl->Py() - ppi3.Py();
+  double pzNf = nu->Pz() + Ni->Pz() - fsl->Pz() - ppi3.Pz();
+  double ENf  = nu->E()  + Ni->E()  - fsl->E()  - Epi;
+//
+// Both
+  const TLorentzVector & vtx   = *(nu->X4());
+  int mom = evrec->TargetNucleusPosition();
+ 
+//
+// Fill the records
+  evrec->AddParticle(
+  nucl_pdgc,kIStStableFinalState, mom,-1,-1,-1,
+      pxNf, pyNf, pzNf, ENf, 0, 0, 0, 0);
+ 
+  evrec->AddParticle(
+  pion_pdgc,kIStStableFinalState, mom,-1,-1,-1,
+     ppi3.Px(), ppi3.Py(),ppi3.Pz(),Epi, vtx.X(), vtx.Y(), vtx.Z(), vtx.T());
+}
 

@@ -47,6 +47,10 @@ private:
 
   double fVldEmin;
   double fVldEmax;
+  
+  bool fGSLInLogX;
+  bool fGSLInLogY;
+  
 };
 
 }       // genie namespace

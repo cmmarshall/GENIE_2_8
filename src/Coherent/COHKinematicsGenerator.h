@@ -47,8 +47,20 @@ public:
   // methods to load sub-algorithms and config data from the Registry
   void LoadConfig (void);
 
+  // different kinematics calculators for different models
+  void   CalculateKin_ReinSeghal(GHepRecord * event_rec) const;
+  void   CalculateKin_AlvarezRuso(GHepRecord * event_rec) const;
+  void SetKinematics(const double E_l, const double theta_l, const double phi_l, 
+		     const double theta_pi, const double phi_pi, 
+		     const     Interaction* interaction, Kinematics* kinematics) const;
+  bool CheckKinematics(const double E_l, const double theta_l, 
+		       const double phi_l, const double theta_pi, 
+		       const double phi_pi, const Interaction* interaction) const;
+
   // overload KineGeneratorWithCache method to compute max xsec
   double ComputeMaxXSec (const Interaction * in) const;
+  double MaxXSec_ReinSeghal (const Interaction * in) const;
+  double MaxXSec_AlvarezRuso (const Interaction * in) const;
 
   // overload KineGeneratorWithCache method to get energy
   double Energy         (const Interaction * in) const;
