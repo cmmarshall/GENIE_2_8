@@ -96,12 +96,12 @@ void ASKHadronicSystemGenerator::CalculateHadronicSystem_AtharSingleKaon(GHepRec
 
   //-- basic kinematic inputs
   double E    = nu->E();  
-  double M    = kNucleonMass;
+  double M    = (xcls_tag.NProtons()==1) ? kProtonMass : kNeutronMass;
   double mk   = PDGLibrary::Instance()->Find(kaon_pdgc)->Mass();
   double mk2  = TMath::Power(mk,2);
 
   //-- specific kinematic quantities
-  double kaon_T = kinematics->GetKV(kKVTk);
+  double kaon_T = kinematics->GetKV(kKVSelTk);
   double kaon_E = kaon_T + mk;
   double pk = sqrt( kaon_E*kaon_E - mk2 );
 

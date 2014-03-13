@@ -21,6 +21,7 @@
 #include "AtharSingleKaon/AtharSingleKaonPXSec.h"
 #include "Messenger/Messenger.h"
 #include "PDG/PDGUtils.h"
+#include "PDG/PDGLibrary.h"
 #include "Utils/KineUtils.h"
 #include "Utils/MathUtils.h"
 #include "Utils/NuclearUtils.h"
@@ -50,6 +51,9 @@ AtharSingleKaonPXSec::~AtharSingleKaonPXSec()
 double AtharSingleKaonPXSec::XSec(
                   const Interaction * interaction, KinePhaseSpace_t kps) const
 {
+  LOG("AtharSingleKaonPXSec", pDEBUG) 
+    << "In xsec model";
+
   if(! this -> ValidProcess    (interaction) ) return 0.;
   if(! this -> ValidKinematics (interaction) ) return 0.;
 
@@ -87,7 +91,64 @@ bool AtharSingleKaonPXSec::ValidProcess(const Interaction * interaction) const
   const ProcessInfo & proc_info = interaction->ProcInfo();  
   if(!proc_info.IsDeepInelastic() || !proc_info.IsWeakCC()) return false;
 
+  LOG("AtharSingleKaonPXSec", pDEBUG) 
+    << "Woohooo valid process";
+
+
   return true;
+}
+//____________________________________________________________________________
+bool AtharSingleKaonPXSec::ValidKinematics(const Interaction * interaction) const
+{
+  // DIS default version assumes minimum W is M_nucleon + M_pion
+  // We want M_nucleon + M_kaon as the minimum
+  if(interaction->TestBit(kISkipKinematicChk)) return true;
+
+  LOG("AtharSingleKaonPXSec", pDEBUG) 
+    << "checking kinematics";
+
+
+  const InitialState & init_state = interaction->InitState();
+  const XclsTag &      xcls       = interaction->ExclTag();
+  const Target &       tgt        = init_state.Tgt();
+  double E = init_state.ProbeE(kRfHitNucRest); // neutrino energy
+
+  int kaon_pdgc = xcls.StrangeHadronPdg();
+
+  double Mi   = tgt.HitNucP4Ptr()->M(); // initial nucleon mass
+
+  // Final nucleon can be different for K0 interaction
+  double Mf = (xcls.NProtons()==1) ? kProtonMass : kNeutronMass;  
+
+  double mk   = PDGLibrary::Instance()->Find(kaon_pdgc)->Mass();
+  double ml   = PDGLibrary::Instance()->Find(interaction->FSPrimLeptonPdg())->Mass();
+
+  double mtot = ml + mk + Mf; // total mass of FS particles
+
+  double Ethresh = (mtot*mtot - Mi*Mi)/(2. * Mf);
+
+  LOG("AtharSingleKaonPXSec", pDEBUG) 
+            << "Enu= " << E << " threshold= " << Ethresh;
+
+  // Part 1 of ValidKinematics -- energy threshold
+  if( E < Ethresh ) return false;
+/*
+  // Now check if kinematics are allowed
+  // code will return 0 xsec anyway if kinematics aren't physical
+  // do a simple quick check to save time if it's crazy
+  const Kinematics &  kine = interaction->Kine();
+
+  double tk = kine.GetKV( kKVTk );
+  double tl = kine.GetKV( kKVTl );
+
+  // check energy conservation
+  double ek = tk + mk;
+  double el = tl + ml;
+
+  if( E < ek + el ) return false;
+*/
+  return true; 
+
 }
 //____________________________________________________________________________
 void AtharSingleKaonPXSec::Configure(const Registry & config)

@@ -46,7 +46,7 @@ typedef enum EKineVar {
   kKVSelt,
   kKVSelTk,
   kKVSelTl,
-  kKvSelctl
+  kKVSelctl
 
 } KineVar_t;
 
@@ -74,6 +74,10 @@ public:
       case(kKVSelq2): return "*Selected* Momentum transfer q2 (<0)";  break;
       case(kKVSelW) : return "*Selected* Hadronic invariant mass W";  break;
       case(kKVSelt) : return "*Selected* COH 4p transfer to nucleus"; break;
+      case(kKVSelTk): return "*Selected* ASK kaon kinetic energy";    break;
+      case(kKVSelTl): return "*Selected* ASK lepton kinetic energy";  break;
+      case(kKVSelctl): return "*Selected* ASK cosine lepton theta";    break;
+ 
       default       : return "** Unknown kinematic variable **";      break;
     }
     return "** Unknown kinematic variable **";

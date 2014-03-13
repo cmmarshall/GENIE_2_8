@@ -4,26 +4,12 @@
  For the full text of the license visit http://copyright.genie-mc.org
  or see $GENIE/LICENSE
 
- Author: Costas Andreopoulos <costas.andreopoulos \at stfc.ac.uk>
-         STFC, Rutherford Appleton Laboratory 
+ Authors: Chris Marshall <marshall \at pas.rochester.edu>
+          University of Rochester
+          Martti Nirkko
+          University of Berne
 
  For the class documentation see the corresponding header file.
-
- Important revisions after version 2.0.0 :
- @ Feb 09, 2009 - CA
-   Moved into the new Coherent package from its previous location  (EVGModules 
-   package)
- @ Mar 03, 2009 - CA
-   Renamed ASKPiKinematicsGenerator -> ASKKinematicsGenerator in
-   anticipation of reusing the code for simulating coherent production of
-   vector mesons.
- @ May 06, 2009 - CA
-   Fix a problem with the search for the max cross section over the allowed
-   phase space which prevented kinematics to be generated for events near the 
-   energy threshold.
- @ Feb 06, 2013 - CA
-   When the value of the differential cross-section for the selected kinematics
-   is set to the event, set the corresponding KinePhaseSpace_t value too.
 
 */
 //____________________________________________________________________________
@@ -182,21 +168,24 @@ void ASKKinematicsGenerator::CalculateKin_AtharSingleKaon(GHepRecord * evrec) co
      interaction->KinePtr()->SetKV(kKVTl, tl);
      interaction->KinePtr()->SetKV(kKVctl, costhetal);
 
-     // Set Q2 and W so that the standard allowed kinematics function for DIS can be used
-     // The cross section is still given in terms of Tk, Tl, cosThetal though so keep those
+     // Set Q2 and W
+     // This is not actually needed since the ValidKinematics has been overloaded
      double el = tl + ml;
      double pl = TMath::Sqrt(el*el - ml*ml);
+     double Mf = (interaction->ExclTag().NProtons()==1) ? kProtonMass : kNeutronMass; 
      TVector3 lepton_3vector = TVector3(0,0,0);
      lepton_3vector.SetMagThetaPhi(pl,TMath::ACos(costhetal),0.0); //phi_l doesn't affect q2, we'll choose it later
      TLorentzVector P4_lep    = TLorentzVector(lepton_3vector , el );
      TLorentzVector q = P4_nu - P4_lep;
      double Q2 = -q.Mag2();
 
-     interaction->KinePtr()->SetW(mk + kNucleonMass);
+     interaction->KinePtr()->SetW(mk + Mf);
      interaction->KinePtr()->SetQ2(Q2);
 
      // computing cross section for the current kinematics
+     LOG("ASKKinematics", pDEBUG) << "About to call the XSec model";
      xsec = fXSecModel->XSec(interaction, kPSTkTlctl);
+     LOG("ASKKinematics", pDEBUG) << "Got xsec of " << xsec;
 
      //-- decide whether to accept the current kinematics
      if(!fGenerateUniformly) {
@@ -230,9 +219,17 @@ void ASKKinematicsGenerator::CalculateKin_AtharSingleKaon(GHepRecord * evrec) co
           evrec->SetWeight(wght);
         }
 
+        LOG("ASKKinematics", pDEBUG) << "accepting stuff";
+
+
         // reset bits
         interaction->ResetBit(kISkipProcessChk);
         interaction->ResetBit(kISkipKinematicChk);
+
+        interaction->KinePtr()->SetKV(kKVSelTk, tk);
+        interaction->KinePtr()->SetKV(kKVSelTl, tl);
+        interaction->KinePtr()->SetKV(kKVSelctl, costhetal);
+        interaction->KinePtr()->ClearRunningValues();
 
         // set the cross section for the selected kinematics
         evrec->SetDiffXSec(xsec,kPSTkTlctl);

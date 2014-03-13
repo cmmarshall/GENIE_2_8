@@ -71,8 +71,8 @@ void ASKPrimaryLeptonGenerator::CalculatePrimaryLepton(GHepRecord * evrec) const
 //  const InitialState & init_state = interaction->InitState();
 
   // Look-up selected kinematics
-  double lep_t = interaction->Kine().GetKV(kKVTl);
-  double lep_costheta  = interaction->Kine().GetKV(kKVctl);
+  double lep_t = interaction->Kine().GetKV(kKVSelTl);
+  double lep_costheta  = interaction->Kine().GetKV(kKVSelctl);
 
   // Auxiliary params
 //  double Ev  = init_state.ProbeE(kRfLab);
