@@ -52,6 +52,10 @@ public:
 
   double MaxXSec (const GHepRecord * ev) const;
   double MaxXSec (const Interaction * in) const;
+  double ComputeMaxXSec (const Interaction * in) const;
+
+  // overload KineGeneratorWithCache method to get energy
+  double Energy         (const Interaction * in) const;
 
 //  mutable TF3 * fEnvelope; ///< 3-D envelope used for importance sampling
 };

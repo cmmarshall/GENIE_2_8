@@ -242,6 +242,33 @@ void ASKKinematicsGenerator::CalculateKin_AtharSingleKaon(GHepRecord * evrec) co
   }// iterations
 }
 //___________________________________________________________________________
+double ASKKinematicsGenerator::ComputeMaxXSec(const Interaction * in) const
+{
+// Computes the maximum differential cross section in the requested phase
+// space. This method overloads KineGeneratorWithCache::ComputeMaxXSec
+// method and the value is cached at a circular cache branch for retrieval
+// during subsequent event generation.
+
+#ifdef __GENIE_LOW_LEVEL_MESG_ENABLED__
+  SLOG("ASKKinematics", pDEBUG)
+          << "Scanning the allowed phase space {K} for the max(dxsec/d{K})";
+#endif
+  double max_xsec = 0.;
+	max_xsec = MaxXSec(in);
+
+  // Apply safety factor, since value retrieved from the cache might
+  // correspond to a slightly different energy.
+  max_xsec *= fSafetyFactor;
+
+#ifdef __GENIE_LOW_LEVEL_MESG_ENABLED__
+  SLOG("ASKKinematics", pDEBUG) << in->AsString();
+  SLOG("ASKKinematics", pDEBUG) << "Max xsec in phase space = " << max_xsec;
+  SLOG("ASKKinematics", pDEBUG) << "Computed using alg = " << fXSecModel->Id();
+#endif
+
+  return max_xsec;
+}
+//___________________________________________________________________________
 double ASKKinematicsGenerator::MaxXSec(const GHepRecord * ev) const
 {
   Interaction * in = ev->Summary();
@@ -296,6 +323,16 @@ double ASKKinematicsGenerator::MaxXSec(const Interaction * in) const
     }//tl
   }//tk
   return max_xsec;
+}
+//___________________________________________________________________________
+double ASKKinematicsGenerator::Energy(const Interaction * interaction) const
+{
+// Override the base class Energy() method to cache the max xsec for the
+// neutrino energy in the LAB rather than in the hit nucleon rest frame.
+
+  const InitialState & init_state = interaction->InitState();
+  double E = init_state.ProbeE(kRfLab);
+  return E;
 }
 //___________________________________________________________________________
 void ASKKinematicsGenerator::Configure(const Registry & config)
