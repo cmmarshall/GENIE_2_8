@@ -347,6 +347,23 @@ class dXSec_Log_Wrapper: public ROOT::Math::IBaseFunctionMultiDim
     double * fMins;
     double * fMaxes;
 };
+
+// Chris Marshall Athar single kaon stuff
+class d3Xsec_dTldTkdCosThetal: public ROOT::Math::IBaseFunctionMultiDim
+{
+public:
+  d3Xsec_dTldTkdCosThetal(const XSecAlgorithmI * m, const Interaction * i);
+ ~d3Xsec_dTldTkdCosThetal();
+
+  // ROOT::Math::IBaseFunctionMultiDim interface
+  unsigned int                        NDim   (void)               const;
+  double                              DoEval (const double * xin) const;
+  ROOT::Math::IBaseFunctionMultiDim * Clone  (void)               const;
+
+private:
+  const XSecAlgorithmI * fModel;
+  const Interaction *    fInteraction;
+};
                   
 } // wrap  namespace
 } // gsl   namespace

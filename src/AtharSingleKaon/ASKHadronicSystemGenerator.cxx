@@ -87,16 +87,14 @@ void ASKHadronicSystemGenerator::CalculateHadronicSystem_AtharSingleKaon(GHepRec
   const TLorentzVector & p4fsl = *(fsl->P4());
 
   //-- Determine the pdg code of the final state nucleon
-  int nuc_pdgc = Ni->Pdg(); // same as the initial nucleus
+  int nuc_pdgc = (xcls_tag.NProtons()) ? kPdgProton : kPdgNeutron; // there's only ever one nucleon
   int kaon_pdgc = xcls_tag.StrangeHadronPdg();
 
   const Target & tgt = interaction->InitState().Tgt();
-  GHepStatus_t ist = (tgt.IsNucleus()) ?
-                          kIStHadronInTheNucleus : kIStStableFinalState;
 
   //-- basic kinematic inputs
   double E    = nu->E();  
-  double M    = (xcls_tag.NProtons()==1) ? kProtonMass : kNeutronMass;
+  double M    = (xcls_tag.NProtons()) ? kProtonMass : kNeutronMass; // there's only ever one nucleon
   double mk   = PDGLibrary::Instance()->Find(kaon_pdgc)->Mass();
   double mk2  = TMath::Power(mk,2);
 
@@ -155,11 +153,14 @@ void ASKHadronicSystemGenerator::CalculateHadronicSystem_AtharSingleKaon(GHepRec
   // AddParticle (int pdg, GHepStatus_t ist, int mom1, int mom2, int dau1, int dau2, double px, double py, double pz, double E, double x, double y, double z, double t)
   
   evrec->AddParticle(
-     nuc_pdgc, ist, mom,-1,-1,-1, 
+     nuc_pdgc, kIStNucleonTarget, mom,-1,-1,-1, 
      pxNf, pyNf, pzNf, ENf, vtx.X(), vtx.Y(), vtx.Z(), vtx.T());
 
   evrec->AddParticle(
-     kaon_pdgc,ist, mom,-1,-1,-1, 
+     kaon_pdgc,kIStStableFinalState, mom,-1,-1,-1, 
      pxKf, pyKf, pzKf, EKf, vtx.X(), vtx.Y(), vtx.Z(), vtx.T());
+
+  LOG( "ASKHadron", pINFO )
+    << "Nucleon " << nuc_pdgc << " p = (" << pxNf << "," << pyNf << "," << pzNf << ")";
 }
 

@@ -95,7 +95,7 @@ InteractionList * ASKInteractionListGenerator::CreateInteractionList(
 
   for(int i=0; i<nch; i++) {
 
-    ProcessInfo   proc_info(kScDeepInelastic, kIntWeakCC);
+    ProcessInfo   proc_info(kScSingleKaon, kIntWeakCC);
     Interaction * interaction = new Interaction(init_state, proc_info);
 
     Target * target  = interaction->InitStatePtr()->TgtPtr();

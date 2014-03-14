@@ -824,3 +824,57 @@ ROOT::Math::IBaseFunctionMultiDim * genie::utils::gsl::wrap::dXSec_Log_Wrapper::
 {
   return new dXSec_Log_Wrapper(fFn,fIfLog,fMins,fMaxes);
 }
+
+
+
+// New stuff by Chris Marshall for AtharSingleKaon xsec
+//____________________________________________________________________________
+genie::utils::gsl::wrap::d3Xsec_dTldTkdCosThetal::d3Xsec_dTldTkdCosThetal(
+     const XSecAlgorithmI * m, const Interaction * i) :
+ROOT::Math::IBaseFunctionMultiDim(),
+fModel(m),
+fInteraction(i)
+{
+  
+}
+genie::utils::gsl::wrap::d3Xsec_dTldTkdCosThetal::~d3Xsec_dTldTkdCosThetal()
+{
+
+}
+unsigned int genie::utils::gsl::wrap::d3Xsec_dTldTkdCosThetal::NDim(void) const
+{
+  // phi_kq is important kinematic variable maybe?
+  // But in the integral over everything it drops out, so we will analyitically do *2pi for this
+  return 3;
+}
+double genie::utils::gsl::wrap::d3Xsec_dTldTkdCosThetal::DoEval(const double * xin) const
+{
+// inputs:  
+//    Tl [GeV]
+//    Tk [GeV]
+//    cosine theta l
+// outputs: 
+//   differential cross section [10^-38 cm^2] (units are right?)
+//
+  Kinematics * kinematics = fInteraction->KinePtr();
+    
+  double T_l         = xin[0];
+  double T_k         = xin[1];
+  double cos_theta_l = xin[2];
+    
+  kinematics->SetKV(kKVTl, T_l);
+  kinematics->SetKV(kKVTk, T_k);
+  kinematics->SetKV(kKVctl, cos_theta_l);
+  
+  double xsec = fModel->XSec(fInteraction);
+  return xsec/(1E-38 * units::cm2);
+}
+ROOT::Math::IBaseFunctionMultiDim * 
+   genie::utils::gsl::wrap::d3Xsec_dTldTkdCosThetal::Clone() const
+{
+  return 
+    new genie::utils::gsl::wrap::d3Xsec_dTldTkdCosThetal(fModel,fInteraction);
+}
+
+
+

@@ -37,7 +37,7 @@ public:
   double XSec            (const Interaction * i, KinePhaseSpace_t k) const;
   double Integral        (const Interaction * i) const;
   bool   ValidProcess    (const Interaction * i) const;
-  bool   ValidKinematics (const Interaction * i) const;
+//  bool   ValidKinematics (const Interaction * i) const;
 
   //-- override the Algorithm::Configure methods to load configuration
   //   data to private data members
@@ -49,6 +49,22 @@ private:
   void LoadConfig(void);
 
   const XSecIntegratorI * fXSecIntegrator;  ///< cross section integrator
+  
+  // Calculate matrix elements
+  double Amatrix_NN(double theta, double phikq) const;
+  double Amatrix_NP(double theta, double phikq) const;
+  double Amatrix_PP(double theta, double phikq) const;
+  
+  // Physics parameters set globally
+  double pi, amLam, am, amEta, Vus, GeVtocm, fpi, d, f, g, amup, amun, Fm1, Fm2;
+  
+  // Interaction parameters set locally
+  mutable int leptonPDG, reactionType;
+  mutable double aml, amSig, amk, ampi;
+  mutable double Enu, Ekaon, pkvec;
+  
+  // Output calculated by cross-section function
+  mutable double Elep, alepvec, aqvec, angkq, aq0;
 
 };
 

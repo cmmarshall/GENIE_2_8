@@ -229,6 +229,8 @@ void ASKKinematicsGenerator::CalculateKin_AtharSingleKaon(GHepRecord * evrec) co
         interaction->KinePtr()->SetKV(kKVSelTk, tk);
         interaction->KinePtr()->SetKV(kKVSelTl, tl);
         interaction->KinePtr()->SetKV(kKVSelctl, costhetal);
+        interaction->KinePtr()->SetQ2(Q2, true);
+        interaction->KinePtr()->SetW(mk + Mf, true);
         interaction->KinePtr()->ClearRunningValues();
 
         // set the cross section for the selected kinematics

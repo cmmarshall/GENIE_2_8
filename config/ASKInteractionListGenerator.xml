@@ -12,7 +12,9 @@ Name             Type     Optional   Comment               Default
 -->
 
   <param_set name="Default"> 
-        <param type="bool" name="is-CC"> true  </param>
+        <param type="bool" name="is-CC">          true  </param>
+        <param type="bool" name="is-Strange">     true  </param>
+        <param type="bool" name="is-Single-Kaon"> true  </param>
   </param_set>
   
 </alg_conf>

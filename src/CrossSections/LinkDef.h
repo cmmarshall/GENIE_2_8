@@ -15,6 +15,7 @@
 #pragma link C++ class genie::IMDXSec;
 #pragma link C++ class genie::COHXSec;
 #pragma link C++ class genie::COHXSecAR;
+#pragma link C++ class genie::ASKXSec;
 #pragma link C++ class genie::NuElectronXSec;
 
 // Wrappers for GSL/MathMore lib
@@ -29,6 +30,7 @@
 #pragma link C++ class genie::utils::gsl::wrap::d5Xsec_dEldOmegaldOmegapi;
 #pragma link C++ class genie::utils::gsl::wrap::d4Xsec_dEldThetaldOmegapi;
 #pragma link C++ class genie::utils::gsl::wrap::d3Xsec_dOmegaldThetapi;
+#pragma link C++ class genie::utils::gsl::wrap::d3Xsec_dTldTkdCosThetal;
 #pragma link C++ class genie::utils::gsl::wrap::dXSec_dElep_AR;
 #pragma link C++ class genie::utils::gsl::wrap::dXSec_Log_Wrapper;
 

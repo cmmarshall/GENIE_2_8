@@ -32,11 +32,5 @@ Name             Type     Optional   Comment               Default
         <param type="bool" name="set-hit-quark">  true  </param>
   </param_set>
 
-  <param_set name="CC-SingleK-Default">
-        <param type="bool" name="is-CC">          true  </param>
-        <param type="bool" name="is-Strange">     true  </param>
-        <param type="bool" name="set-hit-quark">  true  </param>
-  </param_set>
-
 </alg_conf>
 
