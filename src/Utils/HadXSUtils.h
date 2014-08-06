@@ -68,6 +68,19 @@ namespace hadxs
   double InelasticPionNucleonXSec (double Epion);
   double TotalPionNucleonXSec     (double Epion);
 
+
+  // Pion-Nucleon cross-sections as implemented by C. Berger for re-implementation
+  // of the Rein-Sehgal coherent pion production model, and provided to D. Cherdack.
+  // 
+  // C. Berger & L. Sehgal
+  // "PCAC and coherent pion production by low energy neutrinos"
+  // http://arxiv.org/abs/0812.2653
+  namespace berger
+  {
+    double InelasticPionNucleonXSec (double Epion);
+    double TotalPionNucleonXSec     (double Epion);
+    double PionNucleonXSec     (double Epion, bool get_total);
+  }
 }      // hadxs namespace
 }      // utils namespace
 }      // genie namespace

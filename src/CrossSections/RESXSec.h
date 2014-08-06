@@ -41,6 +41,9 @@ public:
 
 private:
   void LoadConfig (void);
+  
+  bool fGSLInLogX;
+  bool fGSLInLogY;
 };
 
 }       // genie namespace

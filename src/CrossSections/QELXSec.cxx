@@ -150,10 +150,10 @@ double QELXSec::IntegrateOnce(
   ROOT::Math::IBaseFunctionOneDim * func = new 
       utils::gsl::wrap::dXSec_dQ2_E(model, interaction);
   ROOT::Math::IntegrationOneDim::Type ig_type = 
-      utils::gsl::Integration1DimTypeFromString(fGSLIntgType);     
-  ROOT::Math::Integrator ig(ig_type);
-  ig.SetFunction(*func);
-  ig.SetRelTolerance(fGSLRelTol);
+      utils::gsl::Integration1DimTypeFromString(fGSLIntgType);
+  
+  double abstol = 1; //We mostly care about relative tolerance
+  ROOT::Math::Integrator ig(*func,ig_type,abstol,fGSLRelTol,fGSLMaxEval);
   double xsec = ig.Integral(rQ2.min, rQ2.max) * (1E-38 * units::cm2);
      
 #else
@@ -190,8 +190,9 @@ void QELXSec::LoadConfig(void)
   assert(fIntegrator);
 
   // Get GSL integration type & relative tolerance
-  fGSLIntgType = fConfig->GetStringDef("gsl-integration-type",  "adaptive");
+  fGSLIntgType = fConfig->GetStringDef("gsl-integration-type"  ,  "adaptive");
   fGSLRelTol   = fConfig->GetDoubleDef("gsl-relative-tolerance", 0.01);
+  fGSLMaxEval  = (unsigned int) fConfig->GetIntDef   ("gsl-max-eval"          , 100000);
 
   fDoAvgOverNucleonMomentum =
      fConfig->GetBoolDef("AverageOverNucleonMomentum", false);

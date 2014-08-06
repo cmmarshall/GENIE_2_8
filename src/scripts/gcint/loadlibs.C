@@ -56,6 +56,7 @@
   gSystem->Load("libGQEL.so");
   gSystem->Load("libGRES.so");
   gSystem->Load("libGDIS.so");
+  gSystem->Load("libGAtharSingleKaon.so");
   gSystem->Load("libGCoh.so");
   gSystem->Load("libGDfrc.so");
   gSystem->Load("libGMEC.so");
