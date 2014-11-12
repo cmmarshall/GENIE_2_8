@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<alg_conf>
+
+<!--
+Configuration sets for the PauliBlocker EventRecordVisitorI
+
+Configurable Parameters:
+................................................................................................
+Name               Type     Optional   Comment                        Default
+................................................................................................
+FermiMomentumTable string   Yes        Fermi momentum table           GPL FermiMomentumTable
+-->
+
+  <param_set name="Default"> 
+  </param_set>
+
+</alg_conf>
+

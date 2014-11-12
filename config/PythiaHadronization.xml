@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<alg_conf>
+
+<!--
+Configuration for the PYTHIA hadronization model
+
+Configurable Parameters:
+................................................................................................................................
+Name                     Type    Opt   Comment (see PYTHIA manual)                              Default
+................................................................................................................................
+SSBarSuppression         double  Yes   PYTHIA's PARJ(2): the suppression of s quark pair        GPL PYTHIA-SSBarSuppression
+                                       production in the field compared with u,d production
+GaussianPt2              double  Yes   PYTHIA's PARJ(21): corresponds to the width sigma in     GPL PYTHIA-GaussianPt2
+                                       the gaussian transverse momentum distribution for
+                                       primary hadrons
+NonGaussianPt2Tail       double  Yes   PYTHIA's PARJ(23): param used to model non-gaussian      GPL PYTHIA-NonGaussianPt2Tail
+                                       pt2 tails
+RemainingEnergyCutoff    double  Yes   PYTHIA's PARJ(33): param used to define the remaining    GPL PYTHIA-RemainingEnergyCutoff
+                                       energy below which the fragmentation of a parton system
+                                       is stopped and two final hadrons formed
+Wcut                     double  Yes   W cut in DIS/RES join scheme                             GPL Wcut
+R-vp-CC-m2               double  Yes   scaling factor, vp  CC, multiplicity=2                   GPL DIS-HMultWgt-vp-CC-m2
+R-vp-CC-m3               double  Yes   scaling factor, vp  CC, multiplicity=3                   GPL DIS-HMultWgt-vp-CC-m3
+R-vp-NC-m2               double  Yes   scaling factor, vp  NC, multiplicity=2                   GPL DIS-HMultWgt-vp-NC-m2
+R-vp-NC-m3               double  Yes   scaling factor, vp  NC, multiplicity=3                   GPL DIS-HMultWgt-vp-NC-m3
+R-vn-CC-m2               double  Yes   scaling factor, vn  CC, multiplicity=2                   GPL DIS-HMultWgt-vn-CC-m2
+R-vn-CC-m3               double  Yes   scaling factor, vn  CC, multiplicity=3                   GPL DIS-HMultWgt-vn-CC-m3
+R-vn-NC-m2               double  Yes   scaling factor, vn  NC, multiplicity=2                   GPL DIS-HMultWgt-vn-NC-m2
+R-vn-NC-m3               double  Yes   scaling factor, vn  NC, multiplicity=3                   GPL DIS-HMultWgt-vn-NC-m3
+R-vbp-CC-m2              double  Yes   scaling factor, vbp CC, multiplicity=2                   GPL DIS-HMultWgt-vbp-CC-m2
+R-vbp-CC-m3              double  Yes   scaling factor, vbp CC, multiplicity=3                   GPL DIS-HMultWgt-vbp-CC-m3
+R-vbp-NC-m2              double  Yes   scaling factor, vbp NC, multiplicity=2                   GPL DIS-HMultWgt-vbp-NC-m2
+R-vbp-NC-m3              double  Yes   scaling factor, vbp NC, multiplicity=3                   GPL DIS-HMultWgt-vbp-NC-m3
+R-vbn-CC-m2              double  Yes   scaling factor, vbn CC, multiplicity=2                   GPL DIS-HMultWgt-vbn-CC-m2
+R-vbn-CC-m3              double  Yes   scaling factor, vbn CC, multiplicity=3                   GPL DIS-HMultWgt-vbn-CC-m3
+R-vbn-NC-m2              double  Yes   scaling factor, vbn NC, multiplicity=2                   GPL DIS-HMultWgt-vbn-NC-m2
+R-vbn-NC-m3              double  Yes   scaling factor, vbn NC, multiplicity=3                   GPL DIS-HMultWgt-vbn-NC-m3
+Decayer                  alg     Yes   particle decayer algorithm in case of -manual- decays    -unused-
+-->
+
+<!-- 
+  Default PYTHIA 
+-->
+  <param_set name="Default"> 
+  </param_set>
+
+<!-- 
+  Standard PYTHIA
+-->
+  <param_set name="Standard"> 
+    <param type="double" name="SSBarSuppression">      0.30 </param> 
+    <param type="double" name="GaussianPt2">           0.36 </param> 
+    <param type="double" name="NonGaussianPt2Tail">    0.01 </param> 
+    <param type="double" name="RemainingEnergyCutoff"> 0.80 </param> 
+  </param_set>
+
+<!-- 
+  Tuned parameters as used by NUX (see A.Rubbia's talk @ NuINT01) 
+-->
+  <param_set name="NUX"> 
+    <param type="double" name="SSBarSuppression">      0.21 </param> 
+    <param type="double" name="GaussianPt2">           0.44 </param> 
+    <param type="double" name="NonGaussianPt2Tail">    0.01 </param> 
+    <param type="double" name="RemainingEnergyCutoff"> 0.20 </param> 
+  </param_set>
+
+</alg_conf>
+

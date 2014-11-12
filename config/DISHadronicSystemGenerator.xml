@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<alg_conf>
+
+<!--
+
+Configuration sets for DISHadronSystemGenerator EventRecordVisitorI
+
+Algorithm Configurable Parameters:
+.......................................................................................................................
+Name                Type    Opt   Comment                                                   Default
+.......................................................................................................................
+Hadronizer          alg     No   
+PreTransportDecayer alg     No
+FilterPreFragm      bool    No
+ct0                 double  Yes                                                             GPL FZONE-ct0
+Kpt2                double  Yes                                                             GPL FZONE-KPt2
+-->
+
+  <param_set name="Default"> 
+     <param type="alg"  name="Hadronizer">          genie::KNOPythiaHadronization/Default                 </param>
+     <param type="alg"  name="PreTransportDecayer"> genie::UnstableParticleDecayer/BeforeHadronTransport  </param>
+     <param type="bool" name="FilterPreFragm">      false                                                 </param>
+  </param_set>
+
+  <param_set name="Charm"> 
+     <param type="alg"  name="Hadronizer">          genie::CharmHadronization/Default                     </param>
+     <param type="alg"  name="PreTransportDecayer"> genie::UnstableParticleDecayer/BeforeHadronTransport  </param>
+     <param type="bool" name="FilterPreFragm">      false                                                 </param>
+  </param_set>
+
+</alg_conf>
+

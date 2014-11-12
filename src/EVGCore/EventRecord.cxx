@@ -1,0 +1,81 @@
+//____________________________________________________________________________
+/*
+ Copyright (c) 2003-2013, GENIE Neutrino MC Generator Collaboration
+ For the full text of the license visit http://copyright.genie-mc.org
+ or see $GENIE/LICENSE
+
+ Author: Costas Andreopoulos <costas.andreopoulos \at stfc.ac.uk>
+         STFC, Rutherford Appleton Laboratory - October 01, 2004
+
+ For the class documentation see the corresponding header file.
+
+ Important revisions after version 2.0.0 :
+
+*/
+//____________________________________________________________________________
+
+#include "EVGCore/EventRecord.h"
+#include "EVGCore/EventRecordVisitorI.h"
+#include "GHEP/GHepStatus.h"
+#include "GHEP/GHepParticle.h"
+#include "Messenger/Messenger.h"
+
+using namespace genie;
+
+ClassImp(EventRecord)
+
+//____________________________________________________________________________
+namespace genie {
+ ostream & operator<< (ostream& stream, const EventRecord & event_record)
+ {
+   event_record.Print(stream);
+   return stream;
+ }
+}
+//___________________________________________________________________________
+EventRecord::EventRecord() :
+GHepRecord()
+{
+
+}
+//___________________________________________________________________________
+EventRecord::EventRecord(int size) :
+GHepRecord(size)
+{
+
+}
+//___________________________________________________________________________
+EventRecord::EventRecord(const EventRecord & record) :
+GHepRecord(record)
+{
+
+}
+//___________________________________________________________________________
+EventRecord::~EventRecord()
+{
+
+}
+//___________________________________________________________________________
+void EventRecord::AcceptVisitor(EventRecordVisitorI * visitor)
+{
+  visitor->ProcessEventRecord(this);
+}
+//___________________________________________________________________________
+void EventRecord::Copy(const EventRecord & record)
+{
+  try {
+    const GHepRecord & ghep = dynamic_cast<const GHepRecord &>(record);
+
+    GHepRecord::Copy(ghep);
+
+  } catch( std::bad_cast ) {
+    LOG("EventRecord", pERROR) 
+          << "Bad casting to 'const GHepRecord &'. Can not copy EventRecord";
+  }
+}
+//___________________________________________________________________________
+void EventRecord::Print(ostream & stream) const
+{
+  GHepRecord::Print(stream);
+}
+//___________________________________________________________________________
