@@ -26,6 +26,7 @@
   <priority msgstream="AlgFactory">          WARN   </priority>
   <priority msgstream="Algorithm">           WARN   </priority>
   <priority msgstream="AlgConfigPool">       WARN   </priority>
+  <priority msgstream="AlvarezRusoCohPi">    WARN   </priority>
   <priority msgstream="BardinIMD">           WARN   </priority>
   <priority msgstream="BaryonResList">       WARN   </priority>
   <priority msgstream="BaseHad">             WARN   </priority>

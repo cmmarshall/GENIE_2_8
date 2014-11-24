@@ -114,6 +114,22 @@ STFC, Rutherford Appleton Laboratory
 
  <!-- 
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Axial and Vector masses for the Delta formfactors in the Alvarez-Ruso model of coherent scattering.
+  The values comes from Scheiner and von Hippel, Nucl Phys. B 58 (1973) p 333.
+  -->
+  <param type="double" name="COHAR-Ma-Delta"> 1.280 </param>
+  <param type="double" name="COHAR-Mv-Delta"> 0.730 </param>
+ <!-- 
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Axial and Vector masses for the Nucleon formfactors in the Alvarez-Ruso model of coherent scattering.
+  Note that the vector mass comes the BBBA-2003 Quasielastic form factor parametrisation.
+  -->
+  <param type="double" name="COHAR-Ma-Nuc"> 1.000 </param>
+  <param type="double" name="COHAR-Mv-Nuc"> 0.840 </param>
+  <param type="double" name="COHAR-GA0"> 1.2670 </param>
+
+ <!-- 
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   Value of axial form factor at Q2=0  
   -->
   <param type="double" name="QEL-FA0"> -1.2670 </param>
@@ -142,6 +158,32 @@ STFC, Rutherford Appleton Laboratory
   See Rein-Seghal, hep-ph/0606185. Affects the COH CC cross section.
   -->
   <param type="bool" name="COH-UseModifiedPCAC"> true </param>
+
+ <!--
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  a4,5 and b4,5 are parameters in the parametrisation of C_4^A and C_5^A form factors in the Alvarez-Ruso
+  coherent model.
+ -->
+ <param type="double" name="COHAR-a4"> -1.21 </param>
+ <param type="double" name="COHAR-a5"> -1.21 </param>
+ <param type="double" name="COHAR-b4"> 2.0 </param>
+ <param type="double" name="COHAR-b5"> 2.0 </param>
+
+ <!--
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Pion decay constant for Alvarez-Ruso coherent model (GeV)
+  -->
+ <param type="double" name="COHAR-fPi"> 0.093 </param>
+ <!--
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Delta-N coupling constant for Alvarez-Ruso coherent model
+  -->
+ <param type="double" name="COHAR-fStar"> 2.13 </param>
+ <!--
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Nuclear Densityfor Alvarez-Ruso coherent model
+ -->
+ <param type="double" name="COHAR-Rho0"> 0.17 </param>
 
  <!-- 
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -620,13 +662,22 @@ STFC, Rutherford Appleton Laboratory
   <param type="alg" name="XSecModel@genie::EventGenerator/DIS-CC">       genie::QPMDISPXSec/Default              </param>
   <param type="alg" name="XSecModel@genie::EventGenerator/DIS-NC">       genie::QPMDISPXSec/Default              </param>
   <param type="alg" name="XSecModel@genie::EventGenerator/DIS-EM">       genie::QPMDISPXSec/Default              </param>
+
+<!--
+  <param type="alg" name="XSecModel@genie::EventGenerator/COH-CC">       genie::AlvarezRusoCOHPiPXSec/Fast       </param>
+  <param type="alg" name="XSecModel@genie::EventGenerator/COH-NC">       genie::AlvarezRusoCOHPiPXSec/Fast       </param>
+-->
+
   <param type="alg" name="XSecModel@genie::EventGenerator/COH-CC">       genie::ReinSeghalCOHPiPXSec/Default     </param>
   <param type="alg" name="XSecModel@genie::EventGenerator/COH-NC">       genie::ReinSeghalCOHPiPXSec/Default     </param>
+
   <param type="alg" name="XSecModel@genie::EventGenerator/IMD">          genie::BardinIMDRadCorPXSec/Default     </param>
   <param type="alg" name="XSecModel@genie::EventGenerator/IMD-ANH">      genie::IMDAnnihilationPXSec/Default     </param>
   <param type="alg" name="XSecModel@genie::EventGenerator/NUE-EL">       genie::NuElectronPXSec/Default          </param>
   <param type="alg" name="XSecModel@genie::EventGenerator/QEL-CC-CHARM"> genie::KovalenkoQELCharmPXSec/Default   </param>
   <param type="alg" name="XSecModel@genie::EventGenerator/DIS-CC-CHARM"> genie::AivazisCharmPXSecLO/CC-Default   </param>
+  <param type="alg" name="XSecModel@genie::EventGenerator/DIS-CC-SINGLEK"> genie::AtharSingleKaonPXSec/Default   </param>
+  <param type="alg" name="XSecModel@genie::EventGenerator/QEL-CC-LAMBDA"> genie::PaisQELLambdaPXSec/Default      </param>
   <param type="alg" name="XSecModel@genie::EventGenerator/AM-NUGAMMA">   genie::H3AMNuGammaPXSec/Default         </param>
   <param type="alg" name="XSecModel@genie::EventGenerator/DFR-CC">       genie::ReinDFRPXSec/Default             </param>
   <param type="alg" name="XSecModel@genie::EventGenerator/DFR-NC">       genie::ReinDFRPXSec/Default             </param>

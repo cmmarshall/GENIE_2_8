@@ -331,7 +331,7 @@ bool Kinematics::KVSet(KineVar_t kv) const
 }
 //____________________________________________________________________________
 double Kinematics::GetKV(KineVar_t kv) const
-{
+{ 
   if(this->KVSet(kv)) {
      map<KineVar_t, double>::const_iterator iter = fKV.find(kv);
      return iter->second;

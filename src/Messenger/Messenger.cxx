@@ -188,9 +188,11 @@ bool Messenger::SetPrioritiesFromXmlFile(string filenames)
 
          string msgstream = utils::str::TrimSpaces(
                   utils::xml::GetAttribute(xml_msgp, "msgstream"));
-         string priority =
-                utils::xml::TrimSpaces( xmlNodeListGetString(
-                               xml_doc, xml_msgp->xmlChildrenNode, 1));
+                  
+         xmlChar * tmp = xmlNodeListGetString( xml_doc, xml_msgp->xmlChildrenNode, 1);
+         string priority = utils::xml::TrimSpaces( tmp );
+         delete tmp;
+         
          log4cpp::Priority::Value pv = this->PriorityFromString(priority);
          this->SetPriorityLevel(msgstream.c_str(), pv);
          SLOG("Messenger", pINFO)

@@ -312,6 +312,7 @@ void ConvertToGST(void)
   bool   brIsMec       = false;  // Is MEC?
   bool   brIsDfr       = false;  // Is Diffractive?
   bool   brIsImd       = false;  // Is IMD?
+  bool   brIsSingleK   = false;  // Is single kaon?
   bool   brIsImdAnh    = false;  // Is IMD annihilation?
   bool   brIsNuEL      = false;  // Is ve elastic?
   bool   brIsEM        = false;  // Is EM process?
@@ -419,6 +420,7 @@ void ConvertToGST(void)
   s_tree->Branch("coh",           &brIsCoh,         "coh/O"	    );
   s_tree->Branch("dfr",           &brIsDfr,         "dfr/O"	    );
   s_tree->Branch("imd",	          &brIsImd,	    "imd/O"	    );
+  s_tree->Branch("singlek",       &brIsSingleK,     "singlek/O"     );
   s_tree->Branch("imdanh",        &brIsImdAnh,	    "imdanh/O"	    );
   s_tree->Branch("nuel",          &brIsNuEL,        "nuel/O"	    );
   s_tree->Branch("em",	          &brIsEM,	    "em/O"	    );
@@ -602,6 +604,7 @@ void ConvertToGST(void)
     bool is_coh    = proc_info.IsCoherent();
     bool is_dfr    = proc_info.IsDiffractive();
     bool is_imd    = proc_info.IsInverseMuDecay();
+    bool is_singlek = proc_info.IsSingleKaon();
     bool is_imdanh = proc_info.IsIMDAnnihilation();
     bool is_nuel   = proc_info.IsNuElectronElastic();
     bool is_em     = proc_info.IsEM();
@@ -683,7 +686,7 @@ void ConvertToGST(void)
     // Extract more info on the hadronic system
     // Only for QEL/RES/DIS/COH/MEC events
     //
-    bool study_hadsyst = (is_qel || is_res || is_dis || is_coh || is_mec);
+    bool study_hadsyst = (is_qel || is_res || is_dis || is_coh || is_mec || is_singlek);
     
     //
     TObjArrayIter piter(&event);
@@ -800,6 +803,7 @@ void ConvertToGST(void)
     brIsCoh      = is_coh;  
     brIsDfr      = is_dfr;  
     brIsImd      = is_imd;  
+    brIsSingleK  = is_singlek;
     brIsNuEL     = is_nuel;  
     brIsEM       = is_em;  
     brIsMec      = is_mec;

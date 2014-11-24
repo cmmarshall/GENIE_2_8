@@ -25,7 +25,8 @@ TGT =    gEvGen		  	\
 	 gSplineAdd   	  	\
 	 gSplineXml2Root  	\
 	 gMaxPathLengths  	\
-	 gNtpConv	  
+	 gNtpConv	  	\
+	 gCohARTester
 
 all: $(TGT)
 
@@ -87,6 +88,12 @@ endif
 gNtpConv: FORCE
 	$(CXX) $(CXXFLAGS) -c gNtpConv.cxx $(INCLUDES)
 	$(LD) $(LDFLAGS) gNtpConv.o $(LIBRARIES) -o $(GENIE_BIN_PATH)/gntpc 
+
+# Application to calculate various DXSec values  for the 
+# microscopic coherent model
+gCohARTester: FORCE
+	$(CXX) $(CXXFLAGS) -c gCohARTester.cxx $(INCLUDES)
+	$(LD) $(LDFLAGS) gCohARTester.o $(LIBRARIES) -o $(GENIE_BIN_PATH)/gCohARTester
 
 
 #################### CLEANING

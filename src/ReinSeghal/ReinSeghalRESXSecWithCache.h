@@ -48,6 +48,9 @@ protected:
   bool   fUsingDisResJoin;
   double fWcut;
   double fEMax;
+  
+  bool fGSLInLogX;
+  bool fGSLInLogY;
 
   mutable const XSecAlgorithmI * fSingleResXSecModel;
   BaryonResList fResList;

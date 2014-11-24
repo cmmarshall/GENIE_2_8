@@ -189,8 +189,10 @@ bool AlgConfigPool::LoadMasterConfig(void)
 
        string alg_name  = utils::str::TrimSpaces(
                      utils::xml::GetAttribute(xml_ac, "alg"));
-       string config_file = utils::xml::TrimSpaces(
-                xmlNodeListGetString(xml_doc, xml_ac->xmlChildrenNode, 1));
+                     
+       xmlChar * tmp = xmlNodeListGetString( xml_doc, xml_ac->xmlChildrenNode, 1);
+       string config_file = utils::xml::TrimSpaces( tmp );
+       delete tmp;
 
        pair<string, string> alg_conf(alg_name, config_file);
        fConfigFiles.insert(alg_conf);
@@ -294,10 +296,11 @@ bool AlgConfigPool::LoadRegistries(
             string param_name =
                    utils::str::TrimSpaces(
                        utils::xml::GetAttribute(xml_param, "name"));
-            string param_value =
-                    utils::xml::TrimSpaces(
-                               xmlNodeListGetString(
-                                 xml_doc, xml_param->xmlChildrenNode, 1));
+                       
+            xmlChar * tmp = xmlNodeListGetString( xml_doc, xml_param->xmlChildrenNode, 1);
+            string param_value = utils::xml::TrimSpaces( tmp );
+            delete tmp;
+         
             this->AddConfigParameter(
                              config, param_type, param_name, param_value);
         }

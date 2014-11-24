@@ -1,11 +1,11 @@
 //____________________________________________________________________________
 /*
- Copyright (c) 2003-2013, GENIE Neutrino MC Generator Collaboration
+ Copyright (c) 2003-2010, GENIE Neutrino MC Generator Collaboration
  For the full text of the license visit http://copyright.genie-mc.org
  or see $GENIE/LICENSE
 
  Author: Costas Andreopoulos <costas.andreopoulos \at stfc.ac.uk>
-         STFC, Rutherford Appleton Laboratory 
+         STFC, Rutherford Appleton Laboratory - October 03, 2004
 
  For the class documentation see the corresponding header file.
 
@@ -15,9 +15,6 @@
  @ Feb 09, 2009 - CA
    Moved into the new Coherent package from its previous location  (EVGModules 
    package)
- @ Feb 06, 2013 - CA
-   When the value of the differential cross-section for the selected kinematics
-   is set to the event, set the corresponding KinePhaseSpace_t value too.
 
 */
 //____________________________________________________________________________
@@ -169,7 +166,7 @@ void COHElKinematicsGenerator::ProcessEventRecord(GHepRecord * evrec) const
         interaction->KinePtr()->ClearRunningValues();
 
         // set the cross section for the selected kinematics
-        evrec->SetDiffXSec(xsec,kPSyfE);
+        evrec->SetDiffXSec(xsec,kPSxyfE);
 
         return;
      }
