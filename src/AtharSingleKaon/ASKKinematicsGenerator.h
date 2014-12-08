@@ -3,14 +3,14 @@
 
 \class    genie::ASKKinematicsGenerator
 
-\brief    Generates values for the kinematic variables describing coherent 
-          neutrino-nucleus pion production events.
+\brief    Generates values for the kinematic variables describing neutrino-nucleus 
+          single kaon production events.
           Is a concrete implementation of the EventRecordVisitorI interface.
 
-\author   Costas Andreopoulos <costas.andreopoulos \at stfc.ac.uk>
-          STFC, Rutherford Appleton Laboratory
+\author   Chris Marshall <marshall \at pas.rochester.edu>
+          University of Rochester
 
-\created  October 03, 2004
+\created  October 03, 2014
 
 \cpright  Copyright (c) 2003-2013, GENIE Neutrino MC Generator Collaboration
           For the full text of the license visit http://copyright.genie-mc.org
@@ -50,14 +50,16 @@ public:
   // different kinematics calculators for different models
   void   CalculateKin_AtharSingleKaon(GHepRecord * event_rec) const;
 
-  //double MaxXSec (const GHepRecord * ev) const;
-  //double MaxXSec (const Interaction * in) const;
   double ComputeMaxXSec (const Interaction * in) const;
 
   // overload KineGeneratorWithCache method to get energy
   double Energy         (const Interaction * in) const;
 
-//  mutable TF3 * fEnvelope; ///< 3-D envelope used for importance sampling
+private:
+
+  // In computeMaxXSec method, scan log(1-cos(theta)) from this value up to log(2)
+  double fMinLog1MinusCosTheta;
+
 };
 
 }      // genie namespace

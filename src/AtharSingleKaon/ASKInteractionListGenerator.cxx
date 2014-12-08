@@ -68,7 +68,7 @@ InteractionList * ASKInteractionListGenerator::CreateInteractionList(
   }
 
   int probe_pdg = init_state.ProbePdg();
-  bool isnu = pdg::IsNeutrino(probe_pdg) || pdg::IsAntiNeutrino(probe_pdg); 
+  bool isnu = pdg::IsNeutrino(probe_pdg); 
   if( !isnu ) {
      // shouldn't happen... warn
      LOG("IntLst", pWARN)

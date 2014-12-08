@@ -1,18 +1,10 @@
 [The GENIE spy reports]
 
-<<<<<<< HEAD
 $GENIE                       -> /minerva/app/users/marshalc/GENIE_SINGLE_KAON/GENIE_2_8-single_kaon_production
 $SRT_ENV_SET                 -> **undefined**
 $LD_LIBRARY_PATH             -> /minerva/app/users/marshalc/GENIE_SINGLE_KAON/GENIE_2_8-single_kaon_production/lib:/minerva/app/users/perdue/GENIE/support/root/lib:/minerva/app/users/perdue/GENIE/support/pythia6/v6_424/lib:/minerva/app/users/perdue/GENIE/support/log4cpp/lib:/usr/lib64:/minerva/app/users/perdue/GENIE/support/lhapdf/lib:/minerva/app/users/perdue/GENIE/support/gsl/lib:
 $DYLD_LIBRARY_PATH           -> **undefined**
 $PATH                        -> /minerva/app/users/marshalc/GENIE_SINGLE_KAON/GENIE_2_8-single_kaon_production/bin:/minerva/app/users/perdue/GENIE/support/root/bin:/usr/krb5/bin:/usr/kerberos/bin:/usr/local/bin:/bin:/usr/bin
-=======
-$GENIE                       -> /minerva/app/users/marshalc/GENIE_SINGLE_KAON/GENIE_2_8
-$SRT_ENV_SET                 -> **undefined**
-$LD_LIBRARY_PATH             -> /minerva/app/users/marshalc/GENIE_SINGLE_KAON/GENIE_2_8/lib:/minerva/app/users/perdue/GENIE/support/root/lib:/minerva/app/users/perdue/GENIE/support/pythia6/v6_424/lib:/minerva/app/users/perdue/GENIE/support/log4cpp/lib:/usr/lib64:/minerva/app/users/perdue/GENIE/support/lhapdf/lib:/minerva/app/users/perdue/GENIE/support/gsl/lib:
-$DYLD_LIBRARY_PATH           -> **undefined**
-$PATH                        -> /minerva/app/users/marshalc/GENIE_SINGLE_KAON/GENIE_2_8/bin:/minerva/app/users/perdue/GENIE/support/root/bin:/usr/krb5/bin:/usr/kerberos/bin:/usr/local/bin:/bin:/usr/bin
->>>>>>> bfc439f672bd4219de966b9ead6a8b8b07aa3c24
 
 Saving the configuration of your GENIE installation: 
 
@@ -63,113 +55,60 @@ linuxx8664gcc --build=debug --enable-pythia6 --with-pythia6-libdir=/minerva/app/
 
 Saving info on your OS, activity, disk usage & quota limit: 
 
-<<<<<<< HEAD
 Linux minervagpvm03.fnal.gov 2.6.18-371.12.1.el5 #1 SMP Wed Sep 3 16:32:47 CDT 2014 x86_64 x86_64 x86_64 GNU/Linux
 
 Filesystem           1K-blocks      Used Available Use% Mounted on
-/dev/vda2             10395140   8958316    900256  91% /
-/dev/vda7             21981032    176204  20670240   1% /scratch
-/dev/vda6              2030736     37624   1888292   2% /tmp
-/dev/vda3              4061572    803992   3047932  21% /var
-/dev/vda1               124427     33067     84936  29% /boot
+/dev/vda2             18284640   8019308   9321516  47% /
+/dev/vda9              3563484     72804   3306740   3% /scratch
+/dev/vda8              2030736     38392   1887524   2% /tmp
+/dev/vda6              6092360    143500   5634392   3% /opt
+/dev/vda5              8123168    572624   7131252   8% /var
+/dev/vda3             10154020    154236   9475664   2% /var/cache/cvmfs2
+/dev/vda1               505604     16967    462533   4% /boot
 tmpfs                  6153184         0   6153184   0% /dev/shm
-blue2:/fermigrid-app 314572800 197056192 117516608  63% /grid/app
-blue2:/fermigrid-data
-                     28991029248 16392520320 12598508928  57% /grid/data
-blue2:/fermigrid-fermiapp
-                     1825361152 1669994816 155366336  92% /grid/fermiapp
 if-nas-0.fnal.gov:/minos/app
-                     8053063680 7653684192 399379488  96% /minos/app
-blue3.fnal.gov:/minos/data
-                     253325213696 238396550080 14928663616  95% /minos/data
-if-nas-0.fnal.gov:/minerva/app
-                     2147483648 1465335136 682148512  69% /minerva/app
-blue3:/minerva/data  257698037760 212326899328 45371138432  83% /minerva/data
+                     8053063680 6722261952 1330801728  84% /minos/app
+blue2:/fermigrid-app 314572800 198170112 116402688  63% /grid/app
 if-nas-0.fnal.gov:/nusoft/app
-                     1073741824 1008201088  65540736  94% /nusoft/app
-blue3:/nusoft/data   26843545600 18089577792 8753967808  68% /nusoft/data
-blue3:/minerva-data2 53687091200 21868576928 31818514272  41% /minerva/data2
+                     1610612736 948410336 662202400  59% /nusoft/app
+blue3.fnal.gov:/minos/data
+                     253325213696 238099966304 15225247392  94% /minos/data
+blue3:/nusoft/data   26843545600 20404318400 6439227200  77% /nusoft/data
+pnfs-stken:/minerva  1125899906842624 9168819368416 1116731087474208   1% /pnfs/minerva
 gpcf015.fnal.gov:/scratch/minerva
-                     10737287168 8045677568 2691609600  75% /scratch/minerva
-blue3:/minerva/data3 26843545600 16683802816 10159742784  63% /minerva/data3
-AFS                    9000000         0   9000000   0% /afs
-pnfs-stken:/minerva  1125899906842624 8581595070848 1117318311771776   1% /pnfs/minerva
-=======
-Linux minervagpvm03.fnal.gov 2.6.18-371.8.1.el5 #1 SMP Thu Apr 24 14:03:58 CDT 2014 x86_64 x86_64 x86_64 GNU/Linux
-
-Filesystem           1K-blocks      Used Available Use% Mounted on
-/dev/vda2             10395140   8898788    959784  91% /
-/dev/vda7             21981032    176204  20670240   1% /scratch
-/dev/vda6              2030736     39492   1886424   3% /tmp
-/dev/vda3              4061572    897024   2954900  24% /var
-/dev/vda1               124427     33060     84943  29% /boot
-tmpfs                  6153184        12   6153172   1% /dev/shm
-blue2:/fermigrid-app 314572800 189354688 125218112  61% /grid/app
+                     10737287168 8471624704 2265662464  79% /scratch/minerva
 blue2:/fermigrid-data
-                     28991029248 21501722112 7489307136  75% /grid/data
-blue2:/fermigrid-fermiapp
-                     1825361152 1484462016 340899136  82% /grid/fermiapp
-if-nas-0.fnal.gov:/minos/app
-                     8053063680 7397401344 655662336  92% /minos/app
-blue3.fnal.gov:/minos/data
-                     253325213696 231730700576 21594513120  92% /minos/data
-pnfs-stken:/minerva  1125899906842624 7568221227488 1118331685615136   1% /pnfs/minerva
+                     28991029248 15975661376 13015367872  56% /grid/data
 if-nas-0.fnal.gov:/minerva/app
-                     2147483648 1748208032 399275616  82% /minerva/app
-blue3:/minerva/data  257698037760 209932812320 47765225440  82% /minerva/data
-if-nas-0.fnal.gov:/nusoft/app
-                     1073741824 996798944  76942880  93% /nusoft/app
-blue3:/nusoft/data   26843545600 9698891936 17144653664  37% /nusoft/data
-blue3:/minerva-data2 53687091200 19527793568 34159297632  37% /minerva/data2
-gpcf015.fnal.gov:/scratch/minerva
-                     10737287168 7457801216 3279485952  70% /scratch/minerva
+                     2147483648 1567650784 579832864  73% /minerva/app
 blue3:/minerva/data3 26843545600 16683802816 10159742784  63% /minerva/data3
+blue3:/minerva-data2 53687091200 23296949728 30390141472  44% /minerva/data2
+blue3:/minerva/data  257698037760 225590582016 32107455744  88% /minerva/data
+blue2:/fermigrid-fermiapp
+                     1825361152 1678565824 146795328  92% /grid/fermiapp
 AFS                    9000000         0   9000000   0% /afs
->>>>>>> bfc439f672bd4219de966b9ead6a8b8b07aa3c24
 
 Disk quotas for user marshalc (uid 43963): 
      Filesystem  blocks   quota   limit   grace   files   quota   limit   grace
+if-nas-0.fnal.gov:/minos/app
+                      0       0 104857600         21702655       0       0        
 blue2:/fermigrid-app
-<<<<<<< HEAD
-                197056216       0 314572800         2715685       0       0        
-blue2:/fermigrid-data
-                16392520320       0 28991029248         11597677       0       0        
-blue2:/fermigrid-fermiapp
-                1669994812       0 1825361100         21432561       0       0        
-if-nas-0.fnal.gov:/minos/app
-                      0       0 104857600         23741500       0       0        
-blue3.fnal.gov:/minos/data
-                137438953440*      0 137438953440         32822338       0       0        
-if-nas-0.fnal.gov:/minerva/app
-                19193452       0 314572800         13055311       0       0        
-blue3:/minerva/data
-                2822546880       0 10737418240         28209291       0       0        
+                198170160       0 314572800         2716758       0       0        
 if-nas-0.fnal.gov:/nusoft/app
-                1008201116       0 1073741824         12863665       0       0        
-blue3:/nusoft/data
-                18089577792       0 26843545600          239781       0       0        
-blue3:/minerva-data2
-                21868576928       0 53687091200          355819       0       0        
-=======
-                189354716       0 314572800         2696343       0       0        
-blue2:/fermigrid-data
-                21501722144       0 28991029248         12514405       0       0        
-blue2:/fermigrid-fermiapp
-                1484462008       0 1825361100         18570734       0       0        
-if-nas-0.fnal.gov:/minos/app
-                      0       0 104857600         21945168       0       0        
+                948410352       0 1610612736         13071482       0       0        
 blue3.fnal.gov:/minos/data
-                137438953440*      0 137438953440         32456337       0       0        
-if-nas-0.fnal.gov:/minerva/app
-                23411836       0 314572800         12413090       0       0        
-blue3:/minerva/data
-                2849138272       0 10737418240         25502185       0       0        
-if-nas-0.fnal.gov:/nusoft/app
-                996799056       0 1073741824         13233841       0       0        
+                137438953440*      0 137438953440         33060256       0       0        
 blue3:/nusoft/data
-                9698891936       0 26843545600           96241       0       0        
-blue3:/minerva-data2
-                19527793568       0 53687091200          320278       0       0        
->>>>>>> bfc439f672bd4219de966b9ead6a8b8b07aa3c24
+                20404318400       0 26843545600          346772       0       0        
+blue2:/fermigrid-data
+                15975661408       0 28991029248         11716633       0       0        
+if-nas-0.fnal.gov:/minerva/app
+                21382892       0 314572800         12898051       0       0        
 blue3:/minerva/data3
                 16683802816       0 26843545600          992321       0       0        
+blue3:/minerva-data2
+                23296949728       0 53687091200          388242       0       0        
+blue3:/minerva/data
+                2850103840       0 10737418240         29783182       0       0        
+blue2:/fermigrid-fermiapp
+                1678565788       0 1825361100         21268429       0       0        

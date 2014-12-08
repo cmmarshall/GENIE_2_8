@@ -56,30 +56,27 @@ double AtharSingleKaonPXSec::XSec(
   if(! this -> ValidProcess    (interaction) ) return 0.;
   if(! this -> ValidKinematics (interaction) ) return 0.;
   
-  // Check whether phase space object is valid
-//  if(kps!=kPSTkTlctl) {
-//    LOG("AtharSingleKaon", pERROR)
-//      << "Wrong phase space object: " << KinePhaseSpace::AsString(kps);
-//    return 0.;
-//  }
-  
   const InitialState & init_state = interaction -> InitState();
   const Kinematics &   kinematics = interaction -> Kine();
+  Target * target  = interaction->InitStatePtr()->TgtPtr();
+  int nTargetProtons = target->Z();
+  int nTargetNeutrons = target->Z();
   
   // Initialisation begins here
   // --------------------------
+  // mutable variables used in the matrix element calculation
   Enu = init_state.ProbeE(kRfLab);
   leptonPDG = interaction->FSPrimLeptonPdg();
   
   // Fill reaction type (NN=1, NP=2, PP=3)
-  reactionType = 0;
+  reactionType = 0; // mutable
   int numProtons  = interaction->ExclTagPtr()->NProtons();
   int numNeutrons = interaction->ExclTagPtr()->NNeutrons();
   int kaonPDG     = interaction->ExclTagPtr()->StrangeHadronPdg();
   if      (numProtons==0 && numNeutrons==1 && kaonPDG==kPdgKP) reactionType=1;
   else if (numProtons==1 && numNeutrons==0 && kaonPDG==kPdgK0) reactionType=2;
   else if (numProtons==1 && numNeutrons==0 && kaonPDG==kPdgKP) reactionType=3;
-  else {  LOG("AtharSingleKaon", pERROR) << "Reaction not defined!"
+  else {  LOG("AtharSingleKaon", pERROR) << "Reaction not defined! This should NEVER happen!"
                                          << "\n - numProtons  = " << numProtons
                                          << "\n - numNeutrons = " << numNeutrons
                                          << "\n - kaonPDG     = " << kaonPDG;
@@ -95,16 +92,11 @@ double AtharSingleKaonPXSec::XSec(
     << "Tlep = " << Tlep << " Tk = " << Tkaon << " cos theta lep = " << costheta << " phi_kq = " << phikq;
   
   // Set lepton mass
-  if      (leptonPDG==kPdgElectron) aml = kElectronMass;
-  else if (leptonPDG==kPdgMuon )    aml = kMuonMass;
-  else if (leptonPDG==kPdgTau )     aml = kTauMass;     // for completeness
-  else {  LOG("AtharSingleKaon", pERROR) << "Outgoing lepton has PDG " << leptonPDG;
-          return 0.;
-  }
+  aml = PDGLibrary::Instance()->Find(leptonPDG)->Mass(); // mutable
 
   double theta = TMath::ACos(costheta);
   
-  // Set reaction parameters
+  // Set reaction parameters, which are mutables used in the matrix element calculations
   if (reactionType == 1) {
     amSig = PDGLibrary::Instance()->Find(kPdgSigmaM)->Mass();
     amk   = PDGLibrary::Instance()->Find(kPdgKP)->Mass();
@@ -132,28 +124,31 @@ double AtharSingleKaonPXSec::XSec(
   double tkmax = Enu - amk - aml - Tlep;        // maximal allowed kaon energy
   if (Tkaon > tkmax) return 0.;
 
-  Ekaon = Tkaon+amk;
-  pkvec = sqrt(Ekaon*Ekaon-amk*amk);
+  Ekaon = Tkaon+amk; // mutable
+  pkvec = sqrt(Ekaon*Ekaon-amk*amk); // mutable
   
-  double a1, check, amat2;
   double xsec = 0.;
   
-  Elep = Tlep + aml;
-  alepvec = sqrt(Elep*Elep - aml*aml);
-  aq0 = Enu-Elep;
-  a1 = aq0+am-Ekaon;
+  Elep = Tlep + aml; // mutable
+  alepvec = sqrt(Elep*Elep - aml*aml); // mutable
+  aq0 = Enu-Elep; // mutable
+  double a1 = aq0+am-Ekaon; // mutable
+
   // aqvec is the magnitude of the three-momentum transfer to hadron system
   aqvec = sqrt(alepvec*alepvec+Enu*Enu-2.0*Enu*alepvec*costheta);
+
   // this check is basically the longitudinal component of the kaon momentum (in the momentum transfer frame) divided by the total
-  check = (aqvec*aqvec+pkvec*pkvec+am*am-a1*a1)/(2.0*aqvec*pkvec);
+  // if it is larger than 1, the kinematics are non-physical so we should return zero
+  double check = (aqvec*aqvec+pkvec*pkvec+am*am-a1*a1)/(2.0*aqvec*pkvec);
   
+  double amat2; // the matrix element
   if (fabs(check) <= 1.0) { // so it has to be smaller than 1, but it could be negative if the kaon backscatters in com frame
     angkq = check;
     if      (reactionType == 1) amat2 = this->Amatrix_NN(theta, phikq);
     else if (reactionType == 2) amat2 = this->Amatrix_NP(theta, phikq);
     else if (reactionType == 3) amat2 = this->Amatrix_PP(theta, phikq);
     else    return 0.;
-    xsec = alepvec*alepvec*amat2/(32.0*pow(2.0*pi,4)*am*Enu*Elep*aqvec); 
+    xsec = alepvec*alepvec*amat2/(32.0*pow(2.0*kPi,4)*am*Enu*Elep*aqvec); 
   }
   else {
     xsec = 0.;
@@ -163,7 +158,12 @@ double AtharSingleKaonPXSec::XSec(
   // we have T_l instead of p_l so we multiply by dp/dT = E/p
   xsec *= Elep / alepvec;
   
-  //return xsec*GeVtocm/(2.0*pi);     // GENIE does not require this conversion
+  // xsec is now the nucleon-level cross section
+  // There are no fancy nuclear effects for this model, so the nucleus cross section is just 
+  // the nucleon XS times the number of nucleons of the appropriate isospin for the process selected
+  if( reactionType == 1 || reactionType == 2 ) xsec *= nTargetNeutrons; // NN or NP
+  else xsec *= nTargetProtons; // PP
+
   return xsec;
 }
 //____________________________________________________________________________
@@ -182,42 +182,8 @@ bool AtharSingleKaonPXSec::ValidProcess(const Interaction * interaction) const
 
   return true;
 }
-/*
-//____________________________________________________________________________
-bool AtharSingleKaonPXSec::ValidKinematics(const Interaction * interaction) const
-{
-  // DIS default version assumes minimum W is M_nucleon + M_pion
-  // We want M_nucleon + M_kaon as the minimum
-  if(interaction->TestBit(kISkipKinematicChk)) return true;
 
-  const InitialState & init_state = interaction->InitState();
-  const XclsTag &      xcls       = interaction->ExclTag();
-  const Target &       tgt        = init_state.Tgt();
-  double E = init_state.ProbeE(kRfHitNucRest); // neutrino energy
 
-  int kaon_pdgc = xcls.StrangeHadronPdg();
-
-  double Mi   = tgt.HitNucP4Ptr()->M(); // initial nucleon mass
-
-  // Final nucleon can be different for K0 interaction
-  double Mf = (xcls.NProtons()==1) ? kProtonMass : kNeutronMass;  
-
-  double mk   = PDGLibrary::Instance()->Find(kaon_pdgc)->Mass();
-  double ml   = PDGLibrary::Instance()->Find(interaction->FSPrimLeptonPdg())->Mass();
-
-  double mtot = ml + mk + Mf; // total mass of FS particles
-
-  double Ethresh = (mtot*mtot - Mi*Mi)/(2. * Mf);
-
-  LOG("AtharSingleKaonPXSec", pDEBUG) 
-            << "Enu= " << E << " threshold= " << Ethresh;
-
-  // Part 1 of ValidKinematics -- energy threshold
-  if( E < Ethresh ) return false;
-  return true; 
-
-}
-*/
 //____________________________________________________________________________
 void AtharSingleKaonPXSec::Configure(const Registry & config)
 {
@@ -240,20 +206,17 @@ void AtharSingleKaonPXSec::LoadConfig(void)
       dynamic_cast<const XSecIntegratorI *> (this->SubAlg("XSec-Integrator"));
   assert(fXSecIntegrator);
   
-  pi = TMath::Pi();
   amLam = PDGLibrary::Instance()->Find(kPdgLambda)->Mass();
   am = kNeutronMass; // this will be nucleon mass, set event by event
   amEta = PDGLibrary::Instance()->Find(kPdgEta)->Mass();
   Vus=fConfig->GetDoubleDef("ASK-CKM-Vus", gc->GetDouble("CKM-Vus"));
-  GeVtocm = pow(0.1973269631,2)*1.e-26; // GENIE does not want us to convert units
   fpi = 0.0924;                         // pion decay constant
   d = 0.804;                            // SU(3) parameter 'D'
   f = 0.463;                            // SU(3) parameter 'F'
   g = kGF;                              // Fermi coupling
-  //amup = fConfig->GetDoubleDef("ASK-AnomMagnMoment-P", gc->GetDouble("AnomMagnMoment-P"));
-  //amun = fConfig->GetDoubleDef("ASK-AnomMagnMoment-N", gc->GetDouble("AnomMagnMoment-N"));
-  amup =  1.7928;                       // TODO: replace these lines with the above
-  amun = -1.9130;
+  // we really want the anomolous moment, but the one in UserPhysicsOptions is the full moment, despite the name
+  amup = fConfig->GetDoubleDef("ASK-AnomMagnMoment-P", gc->GetDouble("AnomMagnMoment-P")) - 1;
+  amun = fConfig->GetDoubleDef("ASK-AnomMagnMoment-N", gc->GetDouble("AnomMagnMoment-N"));
   Fm1 = -(amup+2.0*amun)/(2.0*am);
   Fm2 = -3.0*amup/(2.0*am);
 
