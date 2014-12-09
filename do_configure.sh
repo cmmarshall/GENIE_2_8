@@ -4,6 +4,7 @@
   --enable-validation-tools \
   --enable-test \
   --enable-debug \
+  --enable-gsl \
   --with-optimiz-level=O0 \
   --enable-numi \
   --enable-rwght \
@@ -13,7 +14,6 @@
   --with-libxml2-lib=/usr/lib64 \
   >& log.config
 
-  # --enable-gsl \
   # --enable-vle-extension \
   # --enable-doxygen-doc \
   # --with-doxygen-path=/usr/bin/doxygen \
