@@ -99,7 +99,7 @@ double ASKXSec::Integrate(
     
   ROOT::Math::IBaseFunctionMultiDim * func = 
         new utils::gsl::wrap::d3Xsec_dTldTkdCosThetal(model, interaction);
-  double kine_min[3] = { zero, zero, -30 }; // Tlep, Tkaon, cosine theta lep
+  double kine_min[3] = { zero, zero, -20 }; // Tlep, Tkaon, cosine theta lep
   double kine_max[3] = { tmax, tmax,  0.69314718056 }; // Tlep, Tkaon, cosine theta lep
     
   ROOT::Math::IntegrationMultiDim::Type ig_type = 

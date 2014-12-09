@@ -98,10 +98,7 @@ void ASKKinematicsGenerator::CalculateKin_AtharSingleKaon(GHepRecord * evrec) co
   double enu = interaction->InitState().ProbeE(kRfLab); // Enu in lab frame
   int kaon_pdgc = interaction->ExclTag().StrangeHadronPdg();
   double mk = PDGLibrary::Instance()->Find(kaon_pdgc)->Mass();
-  double ml = 0.0;
-  if( leppdg == kPdgMuon ) ml = kMuonMass;
-  else if( leppdg == kPdgElectron ) ml = kElectronMass;
-  else if( leppdg == kPdgTau ) ml = kTauMass;
+  double ml = PDGLibrary::Instance()->Find(leppdg)->Mass();
 
   // Maximum possible kinetic energy
   const double Tkmax = enu - mk - ml;
@@ -117,10 +114,10 @@ void ASKKinematicsGenerator::CalculateKin_AtharSingleKaon(GHepRecord * evrec) co
     throw exception;
   }
 
-  // For speed we will draw from x = log(1-costheta)
   const double Tkmin = 0.0;
   const double Tlmin = 0.0;
-  const double xmin = -20.0; // this is artificial cut-off and should be a parameter
+  // for performance, use log( 1 - cos(theta_lepton) ) instead of cos(theta_lepton) because it is sharply peaked near 1.0
+  const double xmin = fMinLog1MinusCosTheta; // set in LoadConfig
   const double xmax =  0.69314718056; // log(2) is physical boundary
   const double phikqmin = 0.0;
   const double phikqmax = 2.0 * kPi;
@@ -153,7 +150,6 @@ void ASKKinematicsGenerator::CalculateKin_AtharSingleKaon(GHepRecord * evrec) co
      }
 
      if(fGenerateUniformly) {
-       //-- Generate x,y pair uniformly in the kinematically allowed range.
        tk = Tkmin + dtk * rnd->RndKine().Rndm();
        tl = Tlmin + dtl * rnd->RndKine().Rndm();
        double x = xmin + dx * rnd->RndKine().Rndm(); // log(1-costheta)
@@ -202,7 +198,7 @@ void ASKKinematicsGenerator::CalculateKin_AtharSingleKaon(GHepRecord * evrec) co
 
         if( xsec*J > xsec_max ) { // freak out if this happens
           LOG("ASKKinematics", pWARN)
-             << "!!!!!!!!!!!!! xsec= " << xsec << ", J= " << J << ", xsec*J = " << xsec*J << " max= " << xsec_max;
+             << "!!!!!!XSEC ABOVE MAX!!!!! xsec= " << xsec << ", J= " << J << ", xsec*J = " << xsec*J << " max= " << xsec_max;
         }
 
         accept = (t< J*xsec);
@@ -275,29 +271,33 @@ double ASKKinematicsGenerator::ComputeMaxXSec(const Interaction * in) const
   double enu = in->InitState().ProbeE(kRfLab); // Enu in lab frame
   int kaon_pdgc = in->ExclTag().StrangeHadronPdg();
   double mk = PDGLibrary::Instance()->Find(kaon_pdgc)->Mass();
-  double ml = 0.0;
-  if( leppdg == kPdgMuon ) ml = kMuonMass;
-  else if( leppdg == kPdgElectron ) ml = kElectronMass;
-  else if( leppdg == kPdgTau ) ml = kTauMass;
+  double ml = PDGLibrary::Instance()->Find(leppdg)->Mass();
 
   const double Tkmax = enu - mk - ml;
   const double Tlmax = enu - mk - ml;
   const double Tkmin = 0.0;
   const double Tlmin = 0.0;
-  const double xmin = -20.0; // this should be a parameter, it's just a cut-off
+  // cross section is sharply peaked at forward lepton
+  // faster to scan over log(1 - cos(theta)) = x
+  const double xmin = fMinLog1MinusCosTheta; // set in LoadConfig
   const double xmax =  0.69314718056; // physical limit -- this is log(2)
   const double dtk = (Tkmax - Tkmin)/Ntk;
   const double dtl = (Tlmax - Tlmin)/Ntl;
   const double dx = (xmax - xmin)/Nctl;
 
-  for(int i=0; i<Ntk; i++) {
+  // XS is 0 when the kinetic energies are == 0, so start at 1
+  for(int i = 1; i < Ntk; i++) {
     double tk = Tkmin + dtk*i;
-    for(int j=0; j<Ntl; j++) {
-      double tl = Tlmin + dtl*j; // actually this is momentum
-      for(int k=0; k<Nctl; k++) {
-        double logoneminuscosthetal = xmin + dx*k;
-        double ctl = 1.0 - TMath::Exp(logoneminuscosthetal);
-        // maximum diff XS is always at pi, save time by not looping over phi
+    for(int j = 1; j < Ntl; j++) {
+      double tl = Tlmin + dtl*j;
+      for(int k = 0; k < Nctl; k++) {
+        double log_1_minus_cosine_theta_lepton = xmin + dx*k;
+        // XS takes cos(theta_lepton), we are scanning over log(1-that) to save time, convert to cos(theta_lepton) here
+        double ctl = 1.0 - TMath::Exp(log_1_minus_cosine_theta_lepton);
+
+        // The cross section is 4D, but the maximum differential cross section always occurs at phi_kq = pi (or -pi)
+        // this is because there is more phase space for the kaon when it is opposite the lepton
+        // to save time in this loop, just set phi_kq to pi
         double phikq = kPi;
 
         in->KinePtr()->SetKV(kKVTk, tk);
@@ -306,6 +306,7 @@ double ASKKinematicsGenerator::ComputeMaxXSec(const Interaction * in) const
         in->KinePtr()->SetKV(kKVphikq, phikq);
 
         double xsec = fXSecModel->XSec(in, kPSTkTlctl);
+
         // xsec returned by model is d4sigma/(dtk dtl dcosthetal dphikq)
         // convert lepton theta to log(1-costheta) by multiplying by jacobian 1 - costheta
         xsec *= (1.0 - ctl);
@@ -362,8 +363,6 @@ void ASKKinematicsGenerator::Configure(string config)
 //____________________________________________________________________________
 void ASKKinematicsGenerator::LoadConfig(void)
 {
-  //AlgConfigPool * confp = AlgConfigPool::Instance();
-  //const Registry * gc = confp->GlobalParameterList();
 
   //-- max xsec safety factor (for rejection method) and min cached energy
   fSafetyFactor = fConfig->GetDoubleDef("MaxXSec-SafetyFactor", 1.5);
@@ -379,12 +378,8 @@ void ASKKinematicsGenerator::LoadConfig(void)
          fConfig->GetDoubleDef("MaxXSec-DiffTolerance",999999.);
   assert(fMaxXSecDiffTolerance>=0);
 
-  //-- Envelope employed when    sampling is used 
-  //   (initialize with dummy range)
-  //   not using this right now
-//  if(fEnvelope) delete fEnvelope;
-//  fEnvelope = new TF3("envelope",
-//    	  kinematics::COHImportanceSamplingEnvelope,0.,1,0.,1,2);
+  fMinLog1MinusCosTheta = fConfig->GetDoubleDef("MaxXSec-MinLog1MinusCosTheta", -20.0);
+
 }
 //____________________________________________________________________________
 

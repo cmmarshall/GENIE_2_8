@@ -96,7 +96,6 @@ void ASKPrimaryLeptonGenerator::CalculatePrimaryLepton(GHepRecord * evrec) const
 
   // Rotate lepton momentum vector from the reference frame (x'y'z') where 
   // {z':(neutrino direction), z'x':(theta plane)} to the LAB
-  // I don't think this will ever do anything because the z direction in the lab is typically neutrino direction
   p3l.RotateUz(unit_nudir);
 
   LOG( "ASKLepton", pDEBUG )

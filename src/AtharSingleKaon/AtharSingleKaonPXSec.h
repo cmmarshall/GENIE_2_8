@@ -37,7 +37,6 @@ public:
   double XSec            (const Interaction * i, KinePhaseSpace_t k) const;
   double Integral        (const Interaction * i) const;
   bool   ValidProcess    (const Interaction * i) const;
-//  bool   ValidKinematics (const Interaction * i) const;
 
   //-- override the Algorithm::Configure methods to load configuration
   //   data to private data members
@@ -56,14 +55,23 @@ private:
   double Amatrix_PP(double theta, double phikq) const;
   
   // Physics parameters set globally
-  double pi, amLam, /*am,*/ amEta, Vus, GeVtocm, fpi, d, f, g, amup, amun, Fm1, Fm2;
+  // The names of these parameters in the code match the convention in the original FORTRAN code
+  // They are used in the matrix element calculations which are thousands of lines long
+  // We try to change as little as possible, so keep these names
+  double amLam, amEta, Vus, fpi, d, f, g, amup, amun, Fm1, Fm2;
   
   // Interaction parameters set locally
+  // These are set event-by-event, and used in the matrix element calculation which is thousands 
+  // of lines long. The names are kept from the original FORTRAN code
+  // They are mutable because the XSec routine must be const in GENIE, but they are needed in the 
+  // matrix element calculations which are separate functions
   mutable int leptonPDG, reactionType;
-  mutable double aml, amSig, amk, ampi, am; // adding am since it needs to be set for each event
+  mutable double aml, amSig, amk, ampi, am;
   mutable double Enu, Ekaon, pkvec;
   
   // Output calculated by cross-section function
+  // essentially returned by reference by the matrix element calculations
+  // mutable because XSec routine must be const in GENIE
   mutable double Elep, alepvec, aqvec, angkq, aq0;
 
 };
