@@ -7,4 +7,3 @@ lib/
 src/Conventions/GBuild.h
 src/make/Make.config
 src/make/Make.config_no_paths
-

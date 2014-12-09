@@ -112,8 +112,8 @@ void ASKHadronicSystemGenerator::CalculateHadronicSystem_AtharSingleKaon(GHepRec
   // Equation 17 of notes from M. Rafi Alam dated 6 November 2013
   double eN = q.E() + M - kaon_E; // nucleon total energy
   double cos_thetaKq = (q3*q3 + pk*pk + M*M - eN*eN)/(2*q3*pk);
-  // this can be slightly larger than 1 due to numerical precision issues
-  // TMath::ACos(a number bigger than 1) is 0, which is fine
+  // this can be slightly larger than 1 due to numerical precision issues -- don't let it be
+  if( cos_thetaKq > 1.0 ) cos_thetaKq = 1.0;
 
   // Get phi for the k-q plane relative to nu-l plane
   double phi_kq = kinematics->GetKV(kKVSelphikq);

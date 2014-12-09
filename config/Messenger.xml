@@ -64,7 +64,7 @@
   <priority msgstream="EvGenListAssembler"> WARN </priority>
   <priority msgstream="ELFormFactors"> INFO </priority>
   <priority msgstream="FermiMover"> INFO </priority>
-  <priority msgstream="FermiP"> INFO </priority>
+  <priority msgstream="FermiP"> WARN </priority>
   <priority msgstream="Flux"> INFO </priority>
   <priority msgstream="FMap"> WARN </priority>
   <priority msgstream="FragmRecUtils"> INFO </priority>
