@@ -1,9 +1,13 @@
 _ROOT*
-log.*
 *.o
-bin/
+*.d
+bin
 build-env.log
-lib/
+lib
+log.config
+log.make
 src/Conventions/GBuild.h
+src/Conventions/GVersion.h
 src/make/Make.config
 src/make/Make.config_no_paths
+
