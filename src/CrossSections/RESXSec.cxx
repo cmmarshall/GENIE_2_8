@@ -100,9 +100,11 @@ double RESXSec::Integrate(
   //LOG("RESXSec", pINFO)  << "XSec[RES] (Ev = " << Ev << " GeV) = " << xsec;
 
   delete interaction;
-  delete wrapped_func;
   delete func;
   return xsec;
+#ifdef __GENIE_GSL_ENABLED__
+  delete wrapped_func;
+#endif
 }
 //____________________________________________________________________________
 void RESXSec::Configure(const Registry & config)

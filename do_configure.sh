@@ -1,15 +1,21 @@
 #!/bin/bash
 
 ./configure \
-  --enable-doxygen-doc \
-  --enable-debug \
+  --enable-validation-tools \
   --enable-test \
-  --enable-numi \
+  --enable-debug \
   --enable-gsl \
   --with-optimiz-level=O0 \
-  --with-doxygen-path=/usr/bin/doxygen \
+  --enable-numi \
+  --enable-rwght \
   --with-log4cpp-inc=$LOG4CPP_INC \
   --with-log4cpp-lib=$LOG4CPP_LIB \
   --with-libxml2-inc=/usr/include/libxml2 \
-  --with-libxml2-lib=/usr/lib64 
+  --with-libxml2-lib=/usr/lib64 \
+  >& log.config
 
+  # --enable-vle-extension \
+  # --enable-doxygen-doc \
+  # --with-doxygen-path=/usr/bin/doxygen \
+  # --disable-lhapdf \
+  # --enable-cernlib \
